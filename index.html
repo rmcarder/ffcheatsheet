@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fantasy 2016</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Fjalla+One|Exo:400,600|Ropa+Sans' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow|Arimo|Dosis|Lato' rel='stylesheet' type='text/css'>
+  <style>
+   .axislabel {
+      fill: #FFFFFF;
+      color: #FFFFFF;
+      font-family: 'Exo', sans-serif;
+      font-size: 16px;
+      }
+    
+    .section {
+      padding: 1em 0;
+    }
+    svg {
+      display: block;
+      margin: 0 auto;
+    }
+    .axis path, .axis line {
+      fill: none;
+      stroke: #4c4c4c;
+      shape-rendering: crispEdges;
+    }
+
+  .line {
+    stroke: blue;
+    fill:none;
+    stroke-width: 3;
+  }
+    
+    .label {
+      font-weight: 700;
+    }
+
+    .point {
+      
+      fill: #5e4fa2;
+      opacity: .07;
+    }
+
+      .point.filtered {
+      opacity: .07;
+    }
+  
+    .point2 {
+      
+      fill: #3288bd;
+      opacity: .7;
+    }
+   
+    .point3 {
+     
+      fill:#66c2a5 ;
+      opacity: .7;
+    }
+   
+      .point4 {
+        fill:#abdda4;
+      
+      opacity: .7;
+    }
+       .point5 {
+      
+      fill: #e6f598;
+      opacity: .7;
+    }
+       .point6 {
+      
+      fill: #fee08b;
+      opacity: .7;
+    }
+       .point7 {
+      
+      fill: #fdae61;
+      opacity: .7;
+    }
+       .point8 {
+      
+      fill:#f46d43 ;
+      opacity: .7;
+    }
+       .point9 {
+      
+      fill: #d53e4f;
+      opacity: .7;
+    }
+       .point10 {
+      
+      fill: #9e0142;
+      opacity: .7;
+    }
+    .point4.filtered {
+      opacity: .07;
+    }
+
+    .bar {
+      stroke: rgb(240, 59, 32);
+      stroke-width: 1;
+      fill: rgb(240, 59, 32);
+      opacity: 1;
+    }
+
+    .bar text {
+      fill: #fff;
+      font: 10px sans-serif;
+    }
+
+    .ybar {
+      stroke: rgb(240, 59, 32);
+      stroke-width: 1;
+      fill: rgb(240, 59, 32);
+      opacity: 1;    }
+
+    .ybar text {
+      fill: #fff;
+      font: 10px sans-serif;
+    }
+
+   
+    .axis text {
+        font-family: 'Arimo', sans-serif;
+        font-size: 11px;
+        fill: #CECECE;
+      }
+     .tooltip {
+       padding: .5em 1em;
+       background: rgba(0,0,0,.75);
+       color: white;
+       font-size: 13px;
+       font-family: 'Arimo', sans-serif;
+       font-weight: 500;
+       line-height: 1;
+       border-radius: 8px;
+     }
+
+    label {
+      font-weight: 2px;
+      color: #FFFFFF;
+    }
+
+    body {
+      background-color: #383838;
+      font-family: 'Arimo', sans-serif;
+      color: #CECECE;
+          }
+
+    th {
+       font-family: 'Exo', sans-serif;
+        color: #FFFFFF;
+        width: 400px;
+                } 
+    h1,h3,h5,h2{
+        font-family: 'Exo', sans-serif;
+        color: #FFFFFF;
+                }   
+    #tier,#team {
+      background-color: #CECECE;
+      color: #4C4C4C;
+      border: none;
+      border-radius: 24px;
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #CECECE;
+      shape-rendering: crispEdges;
+                }
+
+    .btn-toolbar {
+        font-weight: 2px;
+      color: #FFFFFF;
+    }
+   
+
+    
+  </style>
+</head>
+<body>
+<div class="header section">
+  <div class="container">
+    <h1>Rich's Unbeatable Super Fantasy Football Interactive Web Site Cheat Sheet</h1>
+    <p>Collect the Datas. Analyze the Datas. Collect the Moneys. <br>
+      Sources: FFPros, ESPN</p>
+  </div>
+</div>
+<div class="controls section">
+  <div class="container">
+  <!--   <div class="btn-toolbar">
+      <label for="team">Position: </label>
+      <select id="team">
+        <option value="all">All</option>
+        <option class="select-dash" disabled="disabled">-Region-</option>
+        <option value="Northeast">Northeast</option>
+        <option value="Southeast">Southeast</option>
+        <option value="West">West</option>
+        <option value="Midwest">Midwest</option>
+        <option value="Southwest">Southwest</option>
+      </select>
+      <label for="tier">Tier: </label>
+      <select id="tier">
+        <option value="all">All</option>
+        <option class="select-dash" disabled="disabled">-State-</option>
+        <option value="1">1</option>
+        <option value=2>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+       
+       </select>
+    </div>
+  </div> -->
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="chart1"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="chart2"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="chart3"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="chart4"></div>
+        </div>
+    </div>
+</div>  
+</div>
+<script type="text/javascript" src="https://npmcdn.com/d3@3.5.17/d3.min.js"></script>
+<script type="text/javascript" src="https://npmcdn.com/science@1.9.3/science.v1.min.js"></script>
+<script type="text/javascript" src="https://npmcdn.com/simple-statistics@2.0.0/dist/simple-statistics.min.js"></script>
+<script type="text/javascript" src="https://npmcdn.com/d3-tip@0.6.7/index.js"></script>
+<script>
+  var data = [];
+  var options = {
+    tier: 'all',
+    team: 'all',
+  };
+  var margin = { top: 15, right: 15, bottom: 40, left: 80 };
+  var width = 550 - margin.right - margin.left;
+  var height = 350 - margin.top - margin.bottom;
+  var barMax = 8;
+  
+ // FETCH DATA
+  d3.json('data.json', function (error, json) {
+    if (error) { throw error; }    
+    
+    data = json;
+
+      txdata=data.slice();
+    
+
+      QBData = txdata.filter(function (d) {
+        return d.POS === 'QB';});
+      RBData = txdata.filter(function (d) {
+        return d.POS === 'RB';});
+      WRData = txdata.filter(function (d) {
+        return d.POS === 'WR';});
+      TEData = txdata.filter(function (d) {
+        return d.POS === 'TE';});
+
+      console.log(TEData);
+
+
+    if (options.team !== 'all') {
+      var team = options.team;
+
+      gxdata = gxdata.filter(function (d) {
+        return d.Team === team;
+      });
+    }
+
+
+    var charts = [
+       new Chart('#chart1',QBData, 'ESPN', 'QB ESPN Projection (Points)', 'EXPPTS','QB Expert Consensus Projection (Points)', '.f', ',0s',220,350),
+       new Chart('#chart2',RBData, 'ESPN', 'RB ESPN Projection (Points)', 'EXPPTS', 'RB Expert Consensus Projection (Points)', '.0s', ',0s',40,260),
+       new Chart('#chart3',WRData, 'ESPN', 'WR ESPN Projection (Points)', 'EXPPTS', 'WR Expert Consensus Projection (Points)', '.0s', ',0s',50,280),
+       new Chart('#chart4',TEData, 'ESPN', 'TE ESPN Projection (Points)', 'EXPPTS', 'TE Expert Consensus Projection (Points)', '.0s', ',0s',70,200)
+     ];
+
+
+    // EVENT HANDLERS
+    d3.select('#tier').on('change', function () {
+      options.tier = d3.event.target.value;
+      options.team = 'all';
+      QBData = QBData.filter(function (d) {
+        return d.Tier === tier;});
+      RBData = RBData.filter(function (d) {
+        return d.Tier === tier;});
+      WRData = WRData.filter(function (d) {
+        return d.Tier === tier;});
+      TEData = TEData.filter(function (d) {
+        return d.Tier === tier;});
+
+      console.log(QBData);
+      charts.forEach(function (chart) { chart.update(txdata);});
+    });
+
+    d3.select('#team').on('change', function () {
+      options.team = d3.event.target.value;
+      options.tier = 'all';
+      charts.forEach(function (chart) { chart.update(txdata);});
+    });
+
+ });
+  
+
+  function Chart(selector, txdata, xvariable, xtitle, yvariable, ytitle, xAxisFormat, yAxisFormat, scaleMin, scaleMax) {    
+    var chart = this;
+
+    chart.xvariable = xvariable;
+    chart.yvariable = yvariable;
+
+
+    // SVG
+    chart.svg = d3.select(selector)
+      .append('svg')
+      .attr('width', width + margin.right + margin.left)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+  
+    // SCALES 
+    chart.x = d3.scale.linear()
+      .domain([scaleMin, scaleMax])
+      .range([0, width])
+      .nice();
+
+    chart.y = d3.scale.linear()
+      .domain([scaleMin, scaleMax])
+      .range([height, 0])
+      .nice();
+
+    rscale = d3.scale.sqrt()
+      .domain([0, 65])
+      .range([1,15]);
+     
+
+    // AXES
+    var padding=0
+    var axispadding=50
+    var xaxispadding=35
+
+
+    // Axes
+    var xAxis = d3.svg.axis()
+      .tickSize(-height,0)
+      .scale(chart.x)
+      .orient("bottom")
+      .ticks(10, xAxisFormat);
+
+    var yAxis = d3.svg.axis()
+      .orient("left")
+      .tickSize(-width)
+      .scale(chart.y)
+      .ticks(10, yAxisFormat);
+    
+    var gx = chart.svg.append("g")
+      .attr("class","y axis")
+      .attr("transform","translate(0,"+ height + ")")
+      .call(xAxis)
+      ;
+
+    var gy = chart.svg.append("g")
+      .attr("class","y axis")
+      .attr("transform","translate("+ padding + ",0)")
+      .call(yAxis)
+      ;
+
+    chart.svg.append("text")
+      .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+      .attr("class","axislabel")
+      .attr("transform", "translate("+ (-axispadding) +","+(height/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+      .text(ytitle);
+
+   chart.svg.append("text")
+      .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+      .attr("class","axislabel")
+      .attr("transform", "translate("+ (width/2) +","+(height+(xaxispadding))+")")  // centre below axis
+      
+
+    var circle = chart.svg.append("line")
+                        .attr('x1', chart.x(scaleMin))
+                        .attr('y1', chart.y(scaleMin))
+                        .attr("x2", chart.x(scaleMax))
+                        .attr("y2", chart.y(scaleMax))
+                        .attr("stroke-width", 2)
+                        .attr("stroke", "#F03B20");
+
+
+     chart.pointTooltip = d3.tip()
+       .attr('class', 'tooltip')
+       .offset([-6, 0])
+       .html(function(d) { return d.Name +'<br>' + d.POS+', ' + d.Team + '<br> '+'Auction Estimate: '+ (d3.format('$.,0f"'))(d.Auction)+ '<br> '+'Ave. Projection: ' +(d3.format('.1f'))(d.EXPPTS)+ '<br> '+'ESPN Projection: '+(d3.format('.1f'))(d.ESPN)+ '<br> '+'ESPN OverValue: '+ (d3.format('.2f'))(d.ESPNOverValue)+ '<br> '+'Tier: '+ (d3.format('.f'))(d.Tier); });
+
+     chart.pointTooltip(chart.svg);
+ 
+     chart.update(txdata);
+  }
+
+
+
+
+  Chart.prototype.update = function(txdata) {
+   var chart = this;
+  
+      //Options
+   
+    
+
+    // SCATTERPLOT
+    var points = chart.svg.selectAll('.point, .point2, .point3, .point4')
+      .data(txdata);
+
+    points.enter().append('circle')
+       .attr('opacity',0)
+       .on('mouseover', chart.pointTooltip.show)
+       .on('mouseout', chart.pointTooltip.hide);
+
+
+    points
+    .transition().duration(1000).delay(150).style('opacity',.7)
+      .attr('class',function (d) {if (d.Tier===1.00) {return 'point';}
+          else if(d.Tier===2.00){return 'point2';}
+           else if(d.Tier===3){return 'point3';}
+            else if(d.Tier===4){return 'point4';}
+             else if(d.Tier===5){return 'point5';}
+              else if(d.Tier===6){return 'point6';}
+               else if(d.Tier===7){return 'point7';}
+                else if(d.Tier===8){return 'point8';}
+                 else if(d.Tier===9){return 'point9';}
+                  else if(d.Tier===10){return 'point10';}
+        ;})
+      .attr('cx', function (d) { return chart.x(d[chart.xvariable]); })
+      .attr('cy', function (d) { return chart.y(d[chart.yvariable]); })
+      .attr('r', function (d) { return rscale(d.Auction); });
+
+    points
+    .on('click',function(){
+      d3.select('.point')
+      .attr('opacity',0);});
+    
+      ;
+    points.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
+
+      
+    }
+    // REGRESSION LINE
+  
+</script>
+</body>
+</html>
