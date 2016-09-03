@@ -8,6 +8,12 @@
   <link href='https://fonts.googleapis.com/css?family=Fjalla+One|Exo:400,600|Ropa+Sans' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow|Arimo|Dosis|Lato' rel='stylesheet' type='text/css'>
   <style>
+
+     @media only screen and (max-width: 1199px) { 
+  #legend { 
+    display: none; 
+  } 
+}
    .axislabel {
       fill: #FFFFFF;
       color: #FFFFFF;
@@ -41,7 +47,7 @@
     .point {
       
       fill: #5e4fa2;
-      opacity: .07;
+      opacity: .7;
     }
 
       .point.filtered {
@@ -139,6 +145,11 @@
        border-radius: 8px;
      }
 
+      .legendtext,#legend {
+      font-family: 'Arimo', sans-serif;
+      color: #CECECE;
+          }
+
     label {
       font-weight: 2px;
       color: #FFFFFF;
@@ -155,7 +166,7 @@
         color: #FFFFFF;
         width: 400px;
                 } 
-    h1,h3,h5,h2{
+    h1,h3,h4,h5,h2{
         font-family: 'Exo', sans-serif;
         color: #FFFFFF;
                 }   
@@ -176,7 +187,8 @@
         font-weight: 2px;
       color: #FFFFFF;
     }
-   
+
+    
 
     
   </style>
@@ -184,8 +196,8 @@
 <body>
 <div class="header section">
   <div class="container">
-    <h1>Rich's Unbeatable Super Fantasy Football Web Site Cheat Sheet</h1>
-    <p>Collect the Datas. Analyze the Datas. Collect the Moneys. <br>
+    <h1>Rich's Unbeatable Super Fantasy Football Web Site Cheat Sheet 2016</h1>
+    <p>For an ESPN draft, determine who is being over/underrated by the ESPN standard projections. Click to remove players as they are drafted. <br>
       Sources: FFPros, ESPN</p>
   </div>
 </div>
@@ -223,16 +235,23 @@
 </div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <div id="chart1"></div>
         </div>
-        <div class="col-lg-6">
+         <div class="col-lg-2">
+            <div style="text-align:center" id="legendtitle"></div>
+            <div style="text-align:center" id="legend"></div>
+        </div>
+        <div class="col-lg-5">
             <div id="chart2"></div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <div id="chart3"></div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-2">
+            <div id="legend2"></div>
+        </div>
+        <div class="col-lg-5">
             <div id="chart4"></div>
         </div>
     </div>
@@ -249,7 +268,7 @@
     team: 'all',
   };
   var margin = { top: 15, right: 15, bottom: 40, left: 80 };
-  var width = 550 - margin.right - margin.left;
+  var width = 450 - margin.right - margin.left;
   var height = 350 - margin.top - margin.bottom;
   var barMax = 8;
   
@@ -308,11 +327,256 @@
       charts.forEach(function (chart) { chart.update(txdata);});
     });
 
-    d3.select('#team').on('change', function () {
-      options.team = d3.event.target.value;
-      options.tier = 'all';
-      charts.forEach(function (chart) { chart.update(txdata);});
-    });
+    var legend1=d3.select('#legend').append('svg').append('g')  ;
+
+    legend1
+      .append('circle')
+      .attr('class','point')
+      .attr('cx',20)
+      .attr('cy',20)
+      .attr('r',8);
+
+    legend1
+      .append('text')
+      .attr('x',30)
+      .attr('y',25)
+      .attr('class','legendtext')
+      .text('Tier 1').style('fill','#CECECE');
+
+    var legend2=d3.select('#legend').select('svg').append('g')
+
+    legend2
+      .append('circle')
+      .attr('class','point2')      
+      .attr('cx',20)
+       .attr('cy',40)
+       .attr('r',8);
+
+    legend2
+      .append('text')
+      .attr('x',30)
+      .attr('y',45)
+      .attr('class','legendtext')
+      .text('Tier 2')
+       .style('fill','#CECECE');
+
+  var legend3=d3.select('#legend').select('svg').append('g')
+
+    legend3
+      .append('circle')
+      .attr('class','point3')      
+      .attr('cx',20)
+       .attr('cy',60)
+       .attr('r',8);
+
+    legend3
+      .append('text')
+      .attr('x',30)
+      .attr('y',65)
+      .attr('class','legendtext')
+      .text('Tier 3')
+       .style('fill','#CECECE');
+  
+    var legend4=d3.select('#legend').select('svg').append('g')      .attr('class','legendtext') 
+
+    legend4
+      .append('circle')
+      .attr('class','point4') 
+      .attr('cx',20)
+       .attr('cy',80)
+       .attr('r',8);
+
+    legend4
+      .append('text')
+      .attr('x',30)
+      .attr('y',85)
+      .attr('class','legendtext')
+      .text('Tier 4')
+       .style('fill','#CECECE');
+
+
+var legend5=d3.select('#legend').select('svg').append('g')
+
+    legend5
+      .append('circle')
+      .attr('class','point5')      
+      .attr('cx',20)
+       .attr('cy',100)
+       .attr('r',8);
+
+    legend5
+      .append('text')
+      .attr('x',30)
+      .attr('y',105)
+      .attr('class','legendtext')
+      .text('Tier 5')
+       .style('fill','#CECECE');
+
+var legend6=d3.select('#legend').select('svg').append('g')
+
+    legend6
+      .append('circle')
+      .attr('class','point6')      
+      .attr('cx',20)
+       .attr('cy',120)
+       .attr('r',8);
+
+    legend6
+      .append('text')
+      .attr('x',30)
+      .attr('y',125)
+      .attr('class','legendtext')
+      .text('Tier 6')
+       .style('fill','#CECECE');
+
+var legend7=d3.select('#legend').select('svg').append('g')
+
+    legend7
+      .append('circle')
+      .attr('class','point7')      
+      .attr('cx',20)
+       .attr('cy',140)
+       .attr('r',8);
+
+    legend7
+      .append('text')
+      .attr('x',30)
+      .attr('y',145)
+      .attr('class','legendtext')
+      .text('Tier 7')
+       .style('fill','#CECECE');
+
+var legend8=d3.select('#legend').select('svg')
+  .attr('height',310)
+  .attr('width',100)
+  .append('g')
+
+    legend8
+      .append('circle')
+      .attr('class','point8')      
+      .attr('cx',20)
+       .attr('cy',160)
+       .attr('r',8);
+
+    legend8
+      .append('text')
+      .attr('x',30)
+      .attr('y',165)
+      .attr('class','legendtext')
+      .text('Tier 8')
+       .style('fill','#CECECE');
+
+var legend9=d3.select('#legend').select('svg').append('g')
+
+    legend9
+      .append('circle')
+      .attr('class','point9')      
+      .attr('cx',20)
+       .attr('cy',180)
+       .attr('r',8);
+
+    legend9
+      .append('text')
+      .attr('x',30)
+      .attr('y',185)
+      .attr('class','legendtext')
+      .text('Tier 9')
+       .style('fill','#CECECE');
+
+var legend10=d3.select('#legend').select('svg').append('g')
+
+    legend10
+      .append('circle')
+      .attr('class','point10')      
+      .attr('cx',20)
+       .attr('cy',200)
+       .attr('r',8);
+
+    legend10
+      .append('text')
+      .attr('x',30)
+      .attr('y',205)
+      .attr('class','legendtext')
+      .text('Tier 10')
+       .style('fill','#CECECE');
+
+  var legend11=d3.select('#legend').select('svg').append('g')
+
+    legend11
+      .append('circle')
+      .attr('class','sizelegend')      
+      .attr('cx',20)
+       .attr('cy',230)
+       .attr('r',13.278)
+       .style('fill','none')
+       .style('stroke','#CECECE');
+
+    legend11
+      .append('text')
+      .attr('x',35)
+      .attr('y',235)
+      .attr('class','legendtext')
+      .text('$50 Value')
+      .style('fill','#CECECE');
+
+   var legend12=d3.select('#legend').select('svg').append('g')
+
+    legend12
+      .append('circle')
+      .attr('class','sizelegend')      
+      .attr('cx',20)
+       .attr('cy',257)
+       .attr('r',10.45)
+       .style('fill','none')
+       .style('stroke','#CECECE');
+
+    legend12
+      .append('text')
+      .attr('x',35)
+      .attr('y',262)
+      .attr('class','legendtext')
+      .text('$30 Value')
+      .style('fill','#CECECE');
+
+     var legend13=d3.select('#legend').select('svg').append('g')
+
+    legend13
+      .append('circle')
+      .attr('class','sizelegend')      
+      .attr('cx',20)
+       .attr('cy',281)
+       .attr('r',7.725)
+       .style('fill','none')
+       .style('stroke','#CECECE');
+
+    legend13
+      .append('text')
+      .attr('x',35)
+      .attr('y',286)
+      .attr('class','legendtext')
+      .text('$15 Value')
+      .style('fill','#CECECE');
+
+       var legend14=d3.select('#legend').select('svg').append('g')
+
+    legend14
+      .append('circle')
+      .attr('class','sizelegend')      
+      .attr('cx',20)
+       .attr('cy',303)
+       .attr('r',2.736)
+       .style('fill','none')
+       .style('stroke','#CECECE');
+
+    legend14
+      .append('text')
+      .attr('x',35)
+      .attr('y',308)
+      .attr('class','legendtext')
+      .text('$1 Value')
+      .style('fill','#CECECE');
+
+
 
  });
   
@@ -346,6 +610,8 @@
     rscale = d3.scale.sqrt()
       .domain([0, 65])
       .range([1,15]);
+
+
      
 
     // AXES
