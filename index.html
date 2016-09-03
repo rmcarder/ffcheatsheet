@@ -656,7 +656,8 @@ var legend10=d3.select('#legend').select('svg').append('g')
    chart.svg.append("text")
       .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
       .attr("class","axislabel")
-      .attr("transform", "translate("+ (width/2) +","+(height+(xaxispadding))+")")  // centre below axis
+      .attr("transform", "translate("+ (width/2) +","+(height+(xaxispadding))+")")
+      .text(xtitle);  // centre below axis
       
 
     var circle = chart.svg.append("line")
