@@ -197,7 +197,7 @@
 <div class="header section">
   <div class="container">
     <h1>Rich's Unbeatable Super Fantasy Football Web Site Cheat Sheet 2016</h1>
-    <p>For an ESPN draft, determine who is being over/underrated by the ESPN standard projections. Click to remove players as they are drafted. <br>
+    <p>For an ESPN draft. See who is being over/underrated by the ESPN standard projections. Click to remove players as they are drafted. <br>
       Sources: FFPros, ESPN</p>
   </div>
 </div>
@@ -691,13 +691,15 @@ var legend10=d3.select('#legend').select('svg').append('g')
       .data(txdata);
 
     points.enter().append('circle')
-       .attr('opacity',0)
+       .attr('r',0)
        .on('mouseover', chart.pointTooltip.show)
        .on('mouseout', chart.pointTooltip.hide);
 
 
     points
-    .transition().duration(1000).delay(150).style('opacity',.7)
+    .transition().duration(1000).ease('elastic').delay(function(d, i) {
+        return i / txdata.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
+        }).style('opacity',.7)
       .attr('class',function (d) {if (d.Tier===1.00) {return 'point';}
           else if(d.Tier===2.00){return 'point2';}
            else if(d.Tier===3){return 'point3';}
@@ -714,9 +716,14 @@ var legend10=d3.select('#legend').select('svg').append('g')
       .attr('r', function (d) { return rscale(d.Auction); });
 
     points
-    .on('click',function(){
-      d3.select('.point')
-      .attr('opacity',0);});
+    .on("click", function(){
+    // Determine if current line is visible
+   
+    // Hide or show the elements
+    d3.select(this).transition().duration(400).style("r",0);
+
+  
+  })
     
       ;
     points.exit().transition().duration(1000).delay(150).style("opacity", 0).remove();
