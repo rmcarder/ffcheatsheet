@@ -1,0 +1,191 @@
+
+     @media only screen and (max-width: 1199px) { 
+  #legend { 
+    display: none; 
+  } 
+}
+
+.navbar-default, .navbar, .nav, #aboutlink, #print-link {
+  background: #3288bd;
+  color: white;
+  text-align: right;
+  border-color: #3288bd; }
+
+   .axislabel {
+      fill: #FFFFFF;
+      color: #FFFFFF;
+      font-family: 'Montserrat', sans-serif;;
+      font-size: 13px;
+      }
+    
+    .section {
+      padding: 1em 0;
+    }
+    svg {
+      display: block;
+      margin: 0 auto;
+    }
+    .axis path, .axis line {
+      fill: none;
+      stroke: #4c4c4c;
+      shape-rendering: crispEdges;
+    }
+
+  .line {
+    stroke: blue;
+    fill:none;
+    stroke-width: 3;
+  }
+    
+    .label {
+      font-weight: 700;
+    }
+
+    .point {
+      
+      fill: #5e4fa2;
+      opacity: .7;
+    }
+
+      .point.filtered {
+      opacity: .07;
+    }
+  
+    .point2 {
+      
+      fill: #3288bd;
+      opacity: .7;
+    }
+   
+    .point3 {
+     
+      fill:#66c2a5 ;
+      opacity: .7;
+    }
+   
+      .point4 {
+        fill:#abdda4;
+      
+      opacity: .7;
+    }
+       .point5 {
+      
+      fill: #e6f598;
+      opacity: .7;
+    }
+       .point6 {
+      
+      fill: #fee08b;
+      opacity: .7;
+    }
+       .point7 {
+      
+      fill: #fdae61;
+      opacity: .7;
+    }
+       .point8 {
+      
+      fill:#f46d43 ;
+      opacity: .7;
+    }
+       .point9 {
+      
+      fill: #d53e4f;
+      opacity: .7;
+    }
+       .point10 {
+      
+      fill: #9e0142;
+      opacity: .7;
+    }
+    .point4.filtered {
+      opacity: .07;
+    }
+
+    .bar {
+      stroke: rgb(240, 59, 32);
+      stroke-width: 1;
+      fill: rgb(240, 59, 32);
+      opacity: 1;
+    }
+
+    .bar text {
+      fill: #fff;
+      font: 10px sans-serif;
+    }
+
+    .ybar {
+      stroke: rgb(240, 59, 32);
+      stroke-width: 1;
+      fill: rgb(240, 59, 32);
+      opacity: 1;    }
+
+    .ybar text {
+      fill: #fff;
+      font: 10px sans-serif;
+    }
+
+   
+    .axis text {
+        font-family: 'Montserrat', sans-serif;;
+        font-size: 10px;
+        fill: #CECECE;
+      }
+     .tooltip {
+       padding: .5em 1em;
+       background: rgba(0,0,0,.75);
+       color: white;
+       font-size: 13px;
+       font-family: 'Montserrat', sans-serif;;
+       font-weight: 500;
+       line-height: 1;
+       border-radius: 8px;
+     }
+
+      .legendtext,#legend {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      color: #CECECE;
+          }
+
+    label {
+      font-weight: 2px;
+      color: #FFFFFF;
+    }
+
+    body {
+      background-color: #303030;
+      font-family: 'Montserrat', sans-serif;;
+      color: #CECECE;
+          }
+
+    th {
+       font-family: 'Montserrat', sans-serif;;
+        color: #FFFFFF;
+        width: 400px;
+                } 
+    h1,h3,h4,h5,h2{
+        font-family: 'Montserrat', sans-serif;;
+        color: #FFFFFF;
+                }   
+    #Jenks,#team {
+      background-color: #CECECE;
+      color: #4C4C4C;
+      border: none;
+      border-radius: 24px;
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #CECECE;
+      shape-rendering: crispEdges;
+                }
+
+    .btn-toolbar {
+        font-weight: 2px;
+      color: #FFFFFF;
+    }
+
+    
+
+    
