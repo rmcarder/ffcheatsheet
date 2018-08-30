@@ -158,7 +158,7 @@
     }
 
     body {
-      background-color: #383838;
+      background-color: #000000;
       font-family: 'Arimo', sans-serif;
       color: #CECECE;
           }
@@ -172,7 +172,7 @@
         font-family: 'Exo', sans-serif;
         color: #FFFFFF;
                 }   
-    #tier,#team {
+    #Jenks,#team {
       background-color: #CECECE;
       color: #4C4C4C;
       border: none;
@@ -198,8 +198,8 @@
 <body>
 <div class="header section">
   <div class="container">
-    <h1>Rich's Unbeatable Super Fantasy Football Web Site Cheat Sheet 2016</h1>
-    <p>Who is being over/underrated by the ESPN standard projections? Expert consensus is the average of CBS, numberFire, STATS, FFToday, NFL.com, and FantasyData projections, based on standard scoring and .25 PPR. Estimated auction value is FFPros for a 10 team league. Click to remove players as they are drafted. Refresh page to reset. <br>
+    <h1>Fantasy Football 2018</h1>
+    <p> <br>
       Sources: FFPros, ESPN</p>
   </div>
 </div>
@@ -216,8 +216,8 @@
         <option value="Midwest">Midwest</option>
         <option value="Southwest">Southwest</option>
       </select>
-      <label for="tier">Tier: </label>
-      <select id="tier">
+      <label for="Jenks">Jenks: </label>
+      <select id="Jenks">
         <option value="all">All</option>
         <option class="select-dash" disabled="disabled">-State-</option>
         <option value="1">1</option>
@@ -266,7 +266,7 @@
 <script>
   var data = [];
   var options = {
-    tier: 'all',
+    Jenks: 'all',
     team: 'all',
   };
   var margin = { top: 15, right: 15, bottom: 40, left: 80 };
@@ -275,7 +275,8 @@
   var barMax = 8;
   
  // FETCH DATA
-  d3.json('data.json', function (error, json) {
+  d3.json('datatest.json', function (error, json) {
+
     if (error) { throw error; }    
     
     data = json;
@@ -306,24 +307,24 @@
 
     var charts = [
        new Chart('#chart1',QBData, 'ESPN', 'QB ESPN Projection (Points)', 'EXPPTS','QB Expert Consensus Projection (Points)', '.f', ',0s',220,350),
-       new Chart('#chart2',RBData, 'ESPN', 'RB ESPN Projection (Points)', 'EXPPTS', 'RB Expert Consensus Projection (Points)', '.0s', ',0s',40,260),
+       new Chart('#chart2',RBData, 'ESPN', 'RB ESPN Projection (Points)', 'EXPPTS', 'RB Expert Consensus Projection (Points)', '.0s', ',0s',80,300),
        new Chart('#chart3',WRData, 'ESPN', 'WR ESPN Projection (Points)', 'EXPPTS', 'WR Expert Consensus Projection (Points)', '.0s', ',0s',50,280),
        new Chart('#chart4',TEData, 'ESPN', 'TE ESPN Projection (Points)', 'EXPPTS', 'TE Expert Consensus Projection (Points)', '.0s', ',0s',70,200)
      ];
 
 
     // EVENT HANDLERS
-    d3.select('#tier').on('change', function () {
-      options.tier = d3.event.target.value;
+    d3.select('#Jenks').on('change', function () {
+      options.Jenks = d3.event.target.value;
       options.team = 'all';
       QBData = QBData.filter(function (d) {
-        return d.Tier === tier;});
+        return d.Jenks === Jenks;});
       RBData = RBData.filter(function (d) {
-        return d.Tier === tier;});
+        return d.Jenks === Jenks;});
       WRData = WRData.filter(function (d) {
-        return d.Tier === tier;});
+        return d.Jenks === Jenks;});
       TEData = TEData.filter(function (d) {
-        return d.Tier === tier;});
+        return d.Jenks === Jenks;});
 
       console.log(QBData);
       charts.forEach(function (chart) { chart.update(txdata);});
@@ -609,9 +610,9 @@ var legend10=d3.select('#legend').select('svg').append('g')
       .range([height, 0])
       .nice();
 
-    rscale = d3.scale.sqrt()
-      .domain([0, 65])
-      .range([1,15]);
+    rscale = d3.scale.linear()
+      .domain([0, 11])
+      .range([1,13]);
 
 
      
@@ -672,7 +673,7 @@ var legend10=d3.select('#legend').select('svg').append('g')
      chart.pointTooltip = d3.tip()
        .attr('class', 'tooltip')
        .offset([-6, 0])
-       .html(function(d) { return d.Name +'<br>' + d.POS+', ' + d.Team + '<br> '+'Auction Estimate: '+ (d3.format('$.,0f"'))(d.Auction)+ '<br> '+'Ave. Projection: ' +(d3.format('.1f'))(d.EXPPTS)+ '<br> '+'ESPN Projection: '+(d3.format('.1f'))(d.ESPN)+ '<br> '+'ESPN OverValue: '+ (d3.format('.2f'))(d.ESPNOverValue)+ '<br> '+'Tier: '+ (d3.format('.f'))(d.Tier); });
+       .html(function(d) { return d.Name +'<br>' + d.POS+', ' + d.Team + '<br> '+'Auction Estimate: '+ (d3.format('$.,0f"'))(d.Auction)+ '<br> '+'Ave. Projection: ' +(d3.format('.1f'))(d.EXPPTS)+ '<br> '+'ESPN Projection: '+(d3.format('.1f'))(d.ESPN)+ '<br> '+'ESPN OverValue: '+ (d3.format('.2f'))(d.ESPNOverValue)+ '<br> '+'Jenks: '+ (d3.format('.f'))(d.Jenks); });
 
      chart.pointTooltip(chart.svg);
  
@@ -703,20 +704,20 @@ var legend10=d3.select('#legend').select('svg').append('g')
     .transition().duration(1000).ease('elastic').delay(function(d, i) {
         return i / txdata.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
         }).style('opacity',.7)
-      .attr('class',function (d) {if (d.Tier===1.00) {return 'point';}
-          else if(d.Tier===2.00){return 'point2';}
-           else if(d.Tier===3){return 'point3';}
-            else if(d.Tier===4){return 'point4';}
-             else if(d.Tier===5){return 'point5';}
-              else if(d.Tier===6){return 'point6';}
-               else if(d.Tier===7){return 'point7';}
-                else if(d.Tier===8){return 'point8';}
-                 else if(d.Tier===9){return 'point9';}
-                  else if(d.Tier===10){return 'point10';}
+      .attr('class',function (d) {if (d.Jenks===10) {return 'point';}
+          else if(d.Jenks===9){return 'point2';}
+           else if(d.Jenks===8){return 'point3';}
+            else if(d.Jenks===7){return 'point4';}
+             else if(d.Jenks===6){return 'point5';}
+              else if(d.Jenks===5){return 'point6';}
+               else if(d.Jenks===4){return 'point7';}
+                else if(d.Jenks===3){return 'point8';}
+                 else if(d.Jenks===2){return 'point9';}
+                  else if(d.Jenks===1){return 'point10';}
         ;})
       .attr('cx', function (d) { return chart.x(d[chart.xvariable]); })
       .attr('cy', function (d) { return chart.y(d[chart.yvariable]); })
-      .attr('r', function (d) { return rscale(d.Auction); });
+      .attr('r', function (d) { return rscale(d.Jenks); });
 
     points
     .on("click", function(){
