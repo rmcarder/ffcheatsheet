@@ -4,7 +4,7 @@ var data = [];
     team: 'all',
   };
   var margin = { top: 15, right: 15, bottom: 40, left: 80 };
-  var width = 550 - margin.right - margin.left;
+  var width = 520 - margin.right - margin.left;
   var height = 400 - margin.top - margin.bottom;
   var barMax = 8;
   
