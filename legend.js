@@ -1,4 +1,4 @@
-var legend1=d3.select('#legend').append('svg').append('g')  ;
+var legend1=d3.selectAll('.legend').append('svg').append('g')  ;
 
     legend1
       .append('circle')
@@ -14,7 +14,7 @@ var legend1=d3.select('#legend').append('svg').append('g')  ;
       .attr('class','legendtext')
       .text('Tier 1').style('fill','#CECECE');
 
-    var legend2=d3.select('#legend').select('svg').append('g')
+    var legend2=d3.selectAll('.legend').select('svg').append('g')
 
     legend2
       .append('circle')
@@ -31,7 +31,7 @@ var legend1=d3.select('#legend').append('svg').append('g')  ;
       .text('Tier 2')
        .style('fill','#CECECE');
 
-  var legend3=d3.select('#legend').select('svg').append('g')
+  var legend3=d3.selectAll('.legend').select('svg').append('g')
 
     legend3
       .append('circle')
@@ -48,7 +48,7 @@ var legend1=d3.select('#legend').append('svg').append('g')  ;
       .text('Tier 3')
        .style('fill','#CECECE');
   
-    var legend4=d3.select('#legend').select('svg').append('g')      .attr('class','legendtext') 
+    var legend4=d3.selectAll('.legend').select('svg').append('g')      .attr('class','legendtext') 
 
     legend4
       .append('circle')
@@ -66,7 +66,7 @@ var legend1=d3.select('#legend').append('svg').append('g')  ;
        .style('fill','#CECECE');
 
 
-var legend5=d3.select('#legend').select('svg').append('g')
+var legend5=d3.selectAll('.legend').select('svg').append('g')
 
     legend5
       .append('circle')
@@ -83,7 +83,7 @@ var legend5=d3.select('#legend').select('svg').append('g')
       .text('Tier 5')
        .style('fill','#CECECE');
 
-var legend6=d3.select('#legend').select('svg').append('g')
+var legend6=d3.selectAll('.legend').select('svg').append('g')
 
     legend6
       .append('circle')
@@ -100,7 +100,7 @@ var legend6=d3.select('#legend').select('svg').append('g')
       .text('Tier 6')
        .style('fill','#CECECE');
 
-var legend7=d3.select('#legend').select('svg').append('g')
+var legend7=d3.selectAll('.legend').select('svg').append('g')
 
     legend7
       .append('circle')
@@ -117,7 +117,7 @@ var legend7=d3.select('#legend').select('svg').append('g')
       .text('Tier 7')
        .style('fill','#CECECE');
 
-var legend8=d3.select('#legend').select('svg')
+var legend8=d3.selectAll('.legend').select('svg')
   .attr('height',310)
   .attr('width',100)
   .append('g')
@@ -137,7 +137,7 @@ var legend8=d3.select('#legend').select('svg')
       .text('Tier 8')
        .style('fill','#CECECE');
 
-var legend9=d3.select('#legend').select('svg').append('g')
+var legend9=d3.selectAll('.legend').select('svg').append('g')
 
     legend9
       .append('circle')
@@ -154,7 +154,7 @@ var legend9=d3.select('#legend').select('svg').append('g')
       .text('Tier 9')
        .style('fill','#CECECE');
 
-var legend10=d3.select('#legend').select('svg').append('g')
+var legend10=d3.selectAll('.legend').select('svg').append('g')
 
     legend10
       .append('circle')
@@ -171,7 +171,7 @@ var legend10=d3.select('#legend').select('svg').append('g')
       .text('Tier 10')
        .style('fill','#CECECE');
 
-  var legend11=d3.select('#legend').select('svg').append('g')
+  var legend11=d3.selectAll('.legend').select('svg').append('g')
 
     legend11
       .append('circle')
@@ -190,7 +190,7 @@ var legend10=d3.select('#legend').select('svg').append('g')
       .text('$65 Value')
       .style('fill','#CECECE');
 
-   var legend12=d3.select('#legend').select('svg').append('g')
+   var legend12=d3.selectAll('.legend').select('svg').append('g')
 
     legend12
       .append('circle')
@@ -209,7 +209,7 @@ var legend10=d3.select('#legend').select('svg').append('g')
       .text('$35 Value')
       .style('fill','#CECECE');
 
-     var legend13=d3.select('#legend').select('svg').append('g')
+     var legend13=d3.selectAll('.legend').select('svg').append('g')
 
     legend13
       .append('circle')
@@ -228,7 +228,7 @@ var legend10=d3.select('#legend').select('svg').append('g')
       .text('$15 Value')
       .style('fill','#CECECE');
 
-       var legend14=d3.select('#legend').select('svg').append('g')
+       var legend14=d3.selectAll('.legend').select('svg').append('g')
 
     legend14
       .append('circle')

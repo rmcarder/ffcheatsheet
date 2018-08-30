@@ -5,11 +5,51 @@
   } 
 }
 
+* {box-sizing: border-box}
+
+/* Set height of body and the document to 100% */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial;
+}
+
+/* Style tab links */
+.tablink {
+    background-color: #555;
+    color: white;
+
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 17px;
+  
+}
+
+.tablink:hover {
+    background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+    color: white;
+    display: none;
+    padding: 95px 20px;
+    height: 100%;
+}
+
+#Home {background-color: red;}
+#News {background-color: green;}
+#Contact {background-color: blue;}
+#About {background-color: orange;}
+
+
 .navbar-default, .navbar, .nav, #aboutlink, #print-link {
-  background: #3288bd;
+  background: #5e4fa2;
   color: white;
   text-align: right;
-  border-color: #3288bd; }
+  border-color: #5e4fa2; }
 
    .axislabel {
       fill: #FFFFFF;
@@ -166,7 +206,7 @@
                 } 
     h1,h3,h4,h5,h2{
         font-family: 'Montserrat', sans-serif;;
-        color: #FFFFFF;
+        color: #3288bd;
                 }   
     #Jenks,#team {
       background-color: #CECECE;
@@ -185,7 +225,5 @@
         font-weight: 2px;
       color: #FFFFFF;
     }
-
-    
 
     

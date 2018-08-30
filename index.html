@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:image" content="preview.png" />
   <title>Fantasy 2016</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="style.css">
   <link href='https://fonts.googleapis.com/css?family=Fjalla+One|Exo:400,600|Ropa+Sans' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=PT+Sans+Narrow|Arimo|Dosis|Lato' rel='stylesheet' type='text/css'>
@@ -41,18 +41,30 @@
    
   </div>
 </div>
-<div class="controls section">
-  <div class="container">
 
-</div>
+
+
+
+  
+
+
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-5">
+    <div class="row text-center">
+        <div class="btn-group-justified col-lg-12 text-center">
+          <div class='text-center'>
+          <button class="tablink" onclick="openPage('Consensus vs ESPN', this, '#f46d43')">Consensus Rank vs ESPN</button>
+          <button class="tablink" onclick="openPage('VoRP', this, '#f46d43')" id="defaultOpen">Value Above Replacement</button>
+        </div>
+      </div>
+
+<div id="Consensus vs ESPN" class="tabcontent text-center">
+  <p class='text-center'>Scatterplots of Consensus point projections (y-axis) vs ESPN point projections (x-axis). Players above the 1:1 line are valued less by ESPN than the average of other projection sites, and therefore can be targeted for potential bargains when playing with opponents relying on ESPN rankings.</p>
+<div class="col-lg-5">
             <div id="chart1"></div>
         </div>
          <div class="col-lg-2">
             <div style="text-align:center" id="legendtitle"></div>
-            <div style="text-align:center" id="legend"></div>
+            <div style="text-align:center" class="legend"></div>
         </div>
         <div class="col-lg-5">
             <div id="chart2"></div>
@@ -61,20 +73,86 @@
             <div id="chart3"></div>
         </div>
         <div class="col-lg-2">
-            <div id="legend2"></div>
+           
         </div>
         <div class="col-lg-5">
             <div id="chart4"></div>
         </div>
+
+</div>
+
+<div id="VoRP" class="tabcontent">
+  <p>Value above replacement player is calculated as the points a player is projected to score over the points a replacement player at the position is projected to score. Replacement value is the projected points scored by a player positionally ranked at the number of starting slots at the that position.</p> 
+<div class="col-lg-5">
+            <div id="chart1vorp"></div>
+        </div>
+         <div class="col-lg-2">
+            <div style="text-align:center" id="legendtitle"></div>
+            <div style="text-align:center" class="legend"></div>
+        </div>
+        <div class="col-lg-5">
+            <div id="chart2vorp"></div>
+        </div>
+        <div class="col-lg-5">
+            <div id="chart3vorp"></div>
+        </div>
+        <div class="col-lg-2">
+           
+        </div>
+        <div class="col-lg-5">
+            <div id="chart4vorp"></div>
+        </div>
+
+</div>
+</div>
+
+
+
+
+
+        
     </div>
 </div>  
-</div>
+
+
+
+<script>
+function openPage(pageName, elmnt, color) {
+    // Hide all elements with class="tabcontent" by default */
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Remove the background color of all tablinks/buttons
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+    }
+
+    // Show the specific tab content
+    document.getElementById(pageName).style.display = "block";
+
+    // Add the specific color to the button used to open the tab content
+    elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+
+
+
+
 <script type="text/javascript" src="https://unpkg.com/d3@3.5.17/d3.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/science@1.9.3/science.v1.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/simple-statistics@2.0.0/dist/simple-statistics.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/d3-tip@0.6.7/index.js"></script>
 
 <script src="OverUnder.js"></script>
+<script src="Vorp.js"></script>
 <script src="legend.js"></script>
 </body>
 </html>
