@@ -40,10 +40,10 @@ var data = [];
 
 
     var vorps = [
-       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus Projection (Points)', '.f', ',0s',-40,65,0,25),
-       new Vorp('#chart2vorp',RBData, 'POSRANK', 'Position Rank', 'VoRP', 'RB Expert Consensus Projection (Points)', '.0s', ',0s',-80,170,0,50),
-       new Vorp('#chart3vorp',WRData, 'POSRANK', 'Position Rank', 'VoRP', 'WR Expert Consensus Projection (Points)', '.0s', ',0s',-60,90,0,70),
-       new Vorp('#chart4vorp',TEData, 'POSRANK', 'Position Rank', 'VoRP', 'TE Expert Consensus Projection (Points)', '.0s', ',0s',-30,100,0,25)
+       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus VoRP', '.f', ',0s',-40,65,0,25),
+       new Vorp('#chart2vorp',RBData, 'POSRANK', 'Position Rank', 'VoRP', 'RB Expert Consensus VoRP', '.0s', ',0s',-80,170,0,50),
+       new Vorp('#chart3vorp',WRData, 'POSRANK', 'Position Rank', 'VoRP', 'WR Expert Consensus VoRP', '.0s', ',0s',-60,90,0,70),
+       new Vorp('#chart4vorp',TEData, 'POSRANK', 'Position Rank', 'VoRP', 'TE Expert Consensus VoRP', '.0s', ',0s',-30,100,0,25)
      ];
 
 
@@ -157,7 +157,7 @@ var data = [];
      vorp.pointTooltip = d3.tip()
        .attr('class', 'tooltip')
        .offset([-6, 0])
-       .html(function(d) { return d.Name +'<br>' + d.POS+', ' + d.Team + '<br> '+'Auction Estimate: '+ (d3.format('$.,0f"'))(d.Auction)+ '<br> '+'Ave. Projection: ' +(d3.format('.1f'))(d.EXPPTS)+ '<br> '+'ESPN Projection: '+(d3.format('.1f'))(d.ESPN)+ '<br> '+'ESPN Overvalue: '+ (d3.format('.2f'))(d.ESPNOverUnder)+ '<br> '+'Tier: '+ (d3.format('.f'))(d.Tier); });
+       .html(function(d) { return d.Name +'<br>' + d.POS+', ' + d.Team + '<br> '+'Auction Estimate: '+ (d3.format('$.,0f"'))(d.Auction)+ '<br> '+'Ave. Projection: ' +(d3.format('.1f'))(d.EXPPTS)+ '<br> '+'ESPN Projection: '+(d3.format('.1f'))(d.ESPN)+ '<br> '+'ESPN Overvalue: '+ (d3.format('.2f'))(d.ESPNOverUnder)+ '<br> '+'Tier: '+ (d3.format('.f'))(d.Tier)+ '<br> '+'VoRP: '+ (d3.format('.1f'))(d.VoRP); });
 
      vorp.pointTooltip(vorp.svg);
  
