@@ -39,17 +39,24 @@ body, html {
     height: 100%;
 }
 
+.football {
+  fill: white;
+}
 #Home {background-color: red;}
 #News {background-color: green;}
 #Contact {background-color: blue;}
 #About {background-color: orange;}
 
 
-.navbar-default, .navbar, .nav, #aboutlink, #print-link {
+.navbar-default, .navbar,.navbar-brand, .nav, #aboutlink, #print-link {
   background: #5e4fa2;
   color: white;
   text-align: right;
   border-color: #5e4fa2; }
+
+  .icon {
+    padding:5px;
+  }
 
    .axislabel {
       fill: #FFFFFF;
