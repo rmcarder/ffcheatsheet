@@ -41,10 +41,10 @@
 
 
     var charts = [
-       new Chart('#chart1',QBData, 'ESPN', 'QB ESPN Projection (Points)', 'EXPPTS','QB Expert Consensus Projection (Points)', '.f', ',0s',220,330),
-       new Chart('#chart2',RBData, 'ESPN', 'RB ESPN Projection (Points)', 'EXPPTS', 'RB Expert Consensus Projection (Points)', '.0s', ',0s',80,300),
-       new Chart('#chart3',WRData, 'ESPN', 'WR ESPN Projection (Points)', 'EXPPTS', 'WR Expert Consensus Projection (Points)', '.0s', ',0s',70,260),
-       new Chart('#chart4',TEData, 'ESPN', 'TE ESPN Projection (Points)', 'EXPPTS', 'TE Expert Consensus Projection (Points)', '.0s', ',0s',70,200)
+       new Chart('#chart1',QBData, 'ESPNPTS', 'QB ESPN Projection (Points)', 'EXPPTS','QB Expert Consensus Projection (Points)', '.f', ',0s',220,330),
+       new Chart('#chart2',RBData, 'ESPNPTS', 'RB ESPN Projection (Points)', 'EXPPTS', 'RB Expert Consensus Projection (Points)', '.0s', ',0s',80,300),
+       new Chart('#chart3',WRData, 'ESPNPTS', 'WR ESPN Projection (Points)', 'EXPPTS', 'WR Expert Consensus Projection (Points)', '.0s', ',0s',70,260),
+       new Chart('#chart4',TEData, 'ESPNPTS', 'TE ESPN Projection (Points)', 'EXPPTS', 'TE Expert Consensus Projection (Points)', '.0s', ',0s',70,200)
      ];
 
 

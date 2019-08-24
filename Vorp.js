@@ -40,10 +40,10 @@ var data = [];
 
 
     var vorps = [
-       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus VoRP', '.f', ',0s',-40,65,0,25),
-       new Vorp('#chart2vorp',RBData, 'POSRANK', 'Position Rank', 'VoRP', 'RB Expert Consensus VoRP', '.0s', ',0s',-80,170,0,50),
-       new Vorp('#chart3vorp',WRData, 'POSRANK', 'Position Rank', 'VoRP', 'WR Expert Consensus VoRP', '.0s', ',0s',-60,90,0,70),
-       new Vorp('#chart4vorp',TEData, 'POSRANK', 'Position Rank', 'VoRP', 'TE Expert Consensus VoRP', '.0s', ',0s',-30,100,0,25)
+       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus VoRP', '.f', ',0s',-40,65,0,24),
+       new Vorp('#chart2vorp',RBData, 'POSRANK', 'Position Rank', 'VoRP', 'RB Expert Consensus VoRP', '.0s', ',0s',-80,180,0,50),
+       new Vorp('#chart3vorp',WRData, 'POSRANK', 'Position Rank', 'VoRP', 'WR Expert Consensus VoRP', '.0s', ',0s',-60,110,0,55),
+       new Vorp('#chart4vorp',TEData, 'POSRANK', 'Position Rank', 'VoRP', 'TE Expert Consensus VoRP', '.0s', ',0s',-30,110,0,25)
      ];
 
 
