@@ -15,8 +15,14 @@ var data = [];
     
     data = json;
 
+data.forEach(function(d) {
+    d.Jenks = +d.Jenks});
+
       txdata=data.slice();
     
+
+
+
 
       QBData = txdata.filter(function (d) {
         return d.POS === 'QB';});
@@ -40,10 +46,10 @@ var data = [];
 
 
     var vorps = [
-       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus VoRP', '.f', ',0s',-40,65,0,24),
-       new Vorp('#chart2vorp',RBData, 'POSRANK', 'Position Rank', 'VoRP', 'RB Expert Consensus VoRP', '.0s', ',0s',-80,180,0,50),
-       new Vorp('#chart3vorp',WRData, 'POSRANK', 'Position Rank', 'VoRP', 'WR Expert Consensus VoRP', '.0s', ',0s',-60,110,0,55),
-       new Vorp('#chart4vorp',TEData, 'POSRANK', 'Position Rank', 'VoRP', 'TE Expert Consensus VoRP', '.0s', ',0s',-30,110,0,25)
+       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus VoRP', '.f', ',0s',-40,95,0,20),
+       new Vorp('#chart2vorp',RBData, 'POSRANK', 'Position Rank', 'VoRP', 'RB Expert Consensus VoRP', '.0s', ',0s',-80,180,0,45),
+       new Vorp('#chart3vorp',WRData, 'POSRANK', 'Position Rank', 'VoRP', 'WR Expert Consensus VoRP', '.0s', ',0s',-60,110,0,45),
+       new Vorp('#chart4vorp',TEData, 'POSRANK', 'Position Rank', 'VoRP', 'TE Expert Consensus VoRP', '.0s', ',0s',-30,90,0,20)
      ];
 
 
@@ -201,7 +207,7 @@ var data = [];
         ;})
       .attr('cx', function (d) { return vorp.x(d[vorp.xvariable]); })
       .attr('cy', function (d) { return vorp.y(d[vorp.yvariable]); })
-      .attr('r', function (d) { return rscale(d.Auction); });
+      .attr('r', function (d) { return rscale(d.Auction*1.5); });
 
     points
     .on("click", function(){

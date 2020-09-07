@@ -2,9 +2,9 @@
 
 setwd("C:/Users/rcarder/Documents/dev/ffcheatsheet")
 
-install.packages("rvest")
-install.packages("BAMMtools")
-install.packages("readr")
+#install.packages("rvest")
+#install.packages("BAMMtools")
+#install.packages("readr")
 
 library(rvest)
 library(BAMMtools)
@@ -164,12 +164,15 @@ ESPN$Name[ESPN$Name=="Mark Ingram II"]<-"Mark Ingram"
 
 
 ##Bind
+Alldata<-FFPROS
+
+
 Alldata <- left_join(FFPROS,ESPN, by=c("Name","Name"))
 
 
 ##Remove columns and set to numeric
 Alldata[,3:12]<-sapply(Alldata[,3:12],function(x) as.numeric(gsub(",", "", x)))
-Alldata[,14:18]<-sapply(Alldata[,14:18],function(x) as.numeric(gsub(",", "", x)))
+Alldata[,14:17]<-sapply(Alldata[,14:17],function(x) as.numeric(gsub(",", "", x)))
 Alldata[,21:31]<-sapply(Alldata[,21:31],function(x) as.numeric(gsub(",", "", x)))
 
 Alldata[is.na(Alldata)] <- 0
@@ -190,6 +193,15 @@ Alldata$EXPPTS <- (Alldata$pass_yds)/25+
   ((Alldata$FL)*2+(Alldata$pass_int*2))
 
 
+Alldata$ESPNPTS <- (Alldata$pass_yds)/25+
+  (Alldata$pass_tds*4)+
+  (Alldata$rush_yds/10)+
+  (Alldata$rush_tds*6)+
+  (Alldata$rec/4)+
+  (Alldata$rec_yds)/10+
+  (Alldata$rec_tds)*6-
+  ((Alldata$FL)*2+(Alldata$pass_int*2))
+
 Alldata$ESPN <- (Alldata$ESPN_pass_yds)/25+
   (Alldata$ESPN_pass_tds*4)+
   (Alldata$ESPN_rush_yds/10)+
@@ -201,19 +213,19 @@ Alldata$ESPN <- (Alldata$ESPN_pass_yds)/25+
 
 
 AlldataQB<-Alldata[Alldata$POS=="QB",]
-QBRep<-AlldataQB$EXPPTS[13]
+QBRep<-AlldataQB$EXPPTS[15]
 AlldataQB$VoRP<-AlldataQB$EXPPTS-QBRep
 
 AlldataRB<-Alldata[Alldata$POS=="RB",]
-RBRep<-AlldataRB$EXPPTS[25]
+RBRep<-AlldataRB$EXPPTS[40]
 AlldataRB$VoRP<-AlldataRB$EXPPTS-RBRep
 
 AlldataWR<-Alldata[Alldata$POS=="WR",]
-WRRep<-AlldataWR$EXPPTS[25]
+WRRep<-AlldataWR$EXPPTS[40]
 AlldataWR$VoRP<-AlldataWR$EXPPTS-WRRep
 
 AlldataTE<-Alldata[Alldata$POS=="TE",]
-TERep<-AlldataTE$EXPPTS[13]
+TERep<-AlldataTE$EXPPTS[15]
 AlldataTE$VoRP<-AlldataTE$EXPPTS-TERep
 
 
@@ -225,16 +237,16 @@ AllData$Jenks<-cut(AllData$VoRP, breaks = breaks, labels=as.character(1:10))
 
 AllData$ESPNOverUnder<-AllData$EXPPTS/AllData$ESPN
 
-AllData[,32:36]<-sapply(AllData[,32:36],function(x) as.numeric(gsub(",", "", x)))
-AllData$Auction[AllData$Jenks==10]<-65
-AllData$Auction[AllData$Jenks==9]<-55
-AllData$Auction[AllData$Jenks==8]<-45
+AllData[,18:24]<-sapply(AllData[,18:24],function(x) as.numeric(gsub(",", "", x)))
+AllData$Auction[AllData$Jenks==10]<-80
+AllData$Auction[AllData$Jenks==9]<-60
+AllData$Auction[AllData$Jenks==8]<-50
 AllData$Auction[AllData$Jenks==7]<-35
-AllData$Auction[AllData$Jenks==6]<-25
-AllData$Auction[AllData$Jenks==5]<-15
-AllData$Auction[AllData$Jenks==4]<-10
-AllData$Auction[AllData$Jenks==3]<-7
-AllData$Auction[AllData$Jenks==2]<-4
+AllData$Auction[AllData$Jenks==6]<-15
+AllData$Auction[AllData$Jenks==5]<-10
+AllData$Auction[AllData$Jenks==4]<-7
+AllData$Auction[AllData$Jenks==3]<-4
+AllData$Auction[AllData$Jenks==2]<-1
 AllData$Auction[AllData$Jenks==1]<-1
 
 AllData$Tier[AllData$Jenks==10]<-1

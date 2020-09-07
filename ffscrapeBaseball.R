@@ -8,6 +8,7 @@ install.packages("readr")
 
 library(rvest)
 library(BAMMtools)
+library(BAMMtools)
 library(RODBC)           # Provides database connectivity
 library(dplyr)           # only used for nice format of Head() function here
 library(gridExtra)
@@ -41,14 +42,24 @@ standings<-read.csv("Standings.csv",header = TRUE)
 standings<-standings %>%
   arrange(R) %>%
   mutate(Rrank=seq.int(nrow(standings)))%>%
-  arrange(AVG) %>%
-  mutate(AVGrank=seq.int(nrow(standings)))%>%
+  arrange(OBP) %>%
+  mutate(OBPrank=seq.int(nrow(standings)))%>%
   arrange(HR) %>%
   mutate(HRrank=seq.int(nrow(standings)))%>%
   arrange(RBI) %>%
   mutate(RBIrank=seq.int(nrow(standings)))%>%
   arrange(SB) %>%
-  mutate(SBrank=seq.int(nrow(standings)))
+  mutate(SBrank=seq.int(nrow(standings)))%>%
+  arrange(W) %>%
+  mutate(Wrank=seq.int(nrow(standings)))%>%
+  arrange(K) %>%
+  mutate(Krank=seq.int(nrow(standings)))%>%
+  arrange(ERA) %>%
+  mutate(ERArank=seq.int(nrow(standings)))%>%
+  arrange(WHIP) %>%
+  mutate(WHIPrank=seq.int(nrow(standings)))%>%
+  arrange(SV) %>%
+  mutate(SVrank=seq.int(nrow(standings)))
 
 
 Rfit <- lm(standings$R ~ standings$Rrank)
@@ -60,19 +71,38 @@ HRSDG<-HRfit$coefficients[2]
 RBIfit <- lm(standings$RBI ~ standings$RBIrank)
 RBISDG<-RBIfit$coefficients[2]
 
-#OBPfit <- lm(standings$OBP ~ standings$OBPrank)
-#OBPSDG<-OBPfit$coefficients[2]
+OBPfit <- lm(standings$OBP ~ standings$OBPrank)
+OBPSDG<-OBPfit$coefficients[2]
 
 SBfit <- lm(standings$SB ~ standings$SBrank)
 SBSDG<-SBfit$coefficients[2]
 
+Wfit <- lm(standings$W ~ standings$Wrank)
+WSDG<-Wfit$coefficients[2]
 
+ERAfit <- lm(standings$ERA ~ standings$ERArank)
+ERASDG<-ERAfit$coefficients[2]
 
+WHIPfit <- lm(standings$WHIP ~ standings$WHIPrank)
+WHIPSDG<-WHIPfit$coefficients[2]
+
+Kfit <- lm(standings$K ~ standings$Krank)
+KSDG<-Kfit$coefficients[2]
+
+SVfit <- lm(standings$SV ~ standings$SVrank)
+SVSDG<-SVfit$coefficients[2]
+
+?lubridate
+
+days<-as.numeric(as.Date("2020-09-27")-as.Date("2020-07-23"))
 
 ##Scrape from FantasyPros
 
 positions<-c("1b","2b","3b","ss","of","c")
-numplayers<-c(20,20,20,20,60,20)
+numplayers<-c(20,20,20,20,50,10)
+
+positionspitchers<-c("sp","rp")
+numpitchers<-c(100,40)
 
 xpathpath<-'//*[@id="data"]'
 
@@ -96,7 +126,7 @@ for (i in positions){
   
   hitters<-hitters %>%
     mutate(POS=paste(i,sep=''),
-      Rscaled=scale(R,center=TRUE, scale=TRUE)[,],
+           Rscaled=scale(R,center=TRUE, scale=TRUE)[,],
            HRscaled=scale(HR,center=TRUE, scale=TRUE)[,],
            RBIscaled=scale(RBI,center=TRUE, scale=TRUE)[,],
            SBscaled=scale(SB,center=TRUE, scale=TRUE)[,],
@@ -107,8 +137,7 @@ for (i in positions){
            RBISGP=RBI/RBISDG,
            SBSGP=SB/SBSDG) 
   hitters<- hitters %>%
-    mutate(totalScaled=Rscaled+HRscaled+RBIscaled+OBPscaled+SBscaled,
-           totalSGP=RSGP+HRSGP+RBISGP+SBSGP)
+           mutate(totalScaled=Rscaled+HRscaled+RBIscaled+OBPscaled+SBscaled)
   
 
   nam <- paste("pos",i, sep = "")
@@ -117,7 +146,69 @@ for (i in positions){
 }
 
 
-Overall<-bind_rows(pos1b,pos2b,pos3b,posss,posc,posof)
+
+j<-0
+i<-"sp"
+for (i in positionspitchers){
+  url<-paste("https://www.fantasypros.com/mlb/projections/",i,".php",sep='')
+  
+  j<-j+1
+  n<-numpitchers[j]
+  
+  pitchers <- url %>%
+    html() %>%
+    html_nodes(xpath=xpathpath) %>%
+    html_table(fill=TRUE)
+  pitchers <- pitchers[[1]]
+  pitchers<-head(pitchers,n=n)
+  pitchers$POSRANK<-seq.int(nrow(pitchers))
+  #pitchers<-pitchers[,-c(17,18)]
+  
+  
+  pitchers<-pitchers %>%
+    mutate(POS=paste(i,sep=''),
+           ERAscaled=scale(ERA,center=TRUE, scale=TRUE)[,],
+           WHIPscaled=scale(WHIP,center=TRUE, scale=TRUE)[,],
+           Kscaled=scale(K,center=TRUE, scale=TRUE)[,],
+           Wscaled=scale(W,center=TRUE, scale=TRUE)[,],
+           SVscaled=scale(SV,center=TRUE, scale=TRUE)[,],
+           #OBPSGP=OBP/OBPSDG,
+           KSGP=K/as.numeric(KSDG),
+           WSGP=W/as.numeric(WSDG),
+           SVSGP=SV/as.numeric(SVSDG)) 
+  pitchers<- pitchers %>%
+    mutate(totalScaled=ERAscaled+WHIPscaled+Kscaled+SVscaled+Wscaled)
+  
+  
+  nam <- paste("pos",i, sep = "")
+  assign(nam, pitchers)
+  
+}
+
+
+
+
+
+Overall<-bind_rows(pos1b,pos2b,pos3b,posss,posc,posof)%>%
+  arrange(-totalScaled)
+
+ForCalcs<-Overall[!duplicated(Overall$Player),]%>%
+  head(100)
+
+totalAB<-mean(ForCalcs$AB)*10
+totalOB<-totalAB*(mean(standings$OBP))
+playerAB<-mean(ForCalcs$AB)
+playerOB<-mean(ForCalcs$AB)*(mean(standings$OBP))
+
+calcAB<-totalAB-playerAB
+calcOB<-totalOB-playerOB
+
+Overall<-Overall%>%
+  mutate(calcOBP=(H+BB)/(AB+BB),
+    OBPSGP=((H+BB+calcOB)/(BB+calcAB+AB)-mean(standings$OBP))/OBPSDG,
+    totalSGP=RSGP+HRSGP+RBISGP+SBSGP+OBPSGP)
+
+Overall<-Overall[!duplicated(Overall$Player),]
 
 
 
@@ -126,13 +217,13 @@ Overall<-bind_rows(pos1b,pos2b,pos3b,posss,posc,posof)
 ##Apply Scoring Syatem
 AllData<-Overall
 
-breaks<-getJenksBreaks(AllData$totalScaled,11)
+breaks<-getJenksBreaks(AllData$totalSGP,11)
 
-AllData$Jenks<-cut(AllData$totalScaled, breaks = breaks, labels=as.character(1:10))
+AllData$Jenks<-cut(AllData$totalSGP, breaks = breaks, labels=as.character(1:10))
 
 AllData<-AllData %>%
-  arrange(-totalScaled) %>%
-  mutate(OverallRank=seq.int(nrow(AllData)), label=paste(Player, " as ",toupper(POS),". Total: ",round(totalScaled,2), sep=''))
+  arrange(-totalSGP) %>%
+  mutate(OverallRank=seq.int(nrow(AllData)), label=paste(Player, " as ",toupper(POS),". Total: ",round(totalSGP,2), sep=''))
 
 
 AllData$Tier[AllData$Jenks==10]<-1

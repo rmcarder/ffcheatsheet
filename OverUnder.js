@@ -16,6 +16,9 @@
     
     data = json;
 
+    data.forEach(function(d) {
+    d.Jenks = +d.Jenks});
+
       txdata=data.slice();
     
 
