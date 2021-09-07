@@ -242,12 +242,12 @@ AllData$Auction[AllData$Jenks==10]<-80
 AllData$Auction[AllData$Jenks==9]<-60
 AllData$Auction[AllData$Jenks==8]<-50
 AllData$Auction[AllData$Jenks==7]<-35
-AllData$Auction[AllData$Jenks==6]<-15
-AllData$Auction[AllData$Jenks==5]<-10
-AllData$Auction[AllData$Jenks==4]<-7
-AllData$Auction[AllData$Jenks==3]<-4
-AllData$Auction[AllData$Jenks==2]<-1
-AllData$Auction[AllData$Jenks==1]<-1
+AllData$Auction[AllData$Jenks==6]<-23
+AllData$Auction[AllData$Jenks==5]<-15
+AllData$Auction[AllData$Jenks==4]<-10
+AllData$Auction[AllData$Jenks==3]<-7
+AllData$Auction[AllData$Jenks==2]<-5
+AllData$Auction[AllData$Jenks==1]<-3
 
 AllData$Tier[AllData$Jenks==10]<-1
 AllData$Tier[AllData$Jenks==9]<-2

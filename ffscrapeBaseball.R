@@ -2,9 +2,9 @@
 
 setwd("C:/Users/rcarder/Documents/dev/ffcheatsheet")
 
-install.packages("rvest")
-install.packages("BAMMtools")
-install.packages("readr")
+#install.packages("rvest")
+#install.packages("BAMMtools")
+#install.packages("readr")
 
 library(rvest)
 library(BAMMtools)
@@ -55,9 +55,9 @@ standings<-standings %>%
   arrange(K) %>%
   mutate(Krank=seq.int(nrow(standings)))%>%
   arrange(ERA) %>%
-  mutate(ERArank=seq.int(nrow(standings)))%>%
+  mutate(ERArank=seq.int(from=10,to=1))%>%
   arrange(WHIP) %>%
-  mutate(WHIPrank=seq.int(nrow(standings)))%>%
+  mutate(WHIPrank=seq.int(from=10,to=1))%>%
   arrange(SV) %>%
   mutate(SVrank=seq.int(nrow(standings)))
 
@@ -92,14 +92,11 @@ KSDG<-Kfit$coefficients[2]
 SVfit <- lm(standings$SV ~ standings$SVrank)
 SVSDG<-SVfit$coefficients[2]
 
-?lubridate
-
-days<-as.numeric(as.Date("2020-09-27")-as.Date("2020-07-23"))
 
 ##Scrape from FantasyPros
 
 positions<-c("1b","2b","3b","ss","of","c")
-numplayers<-c(20,20,20,20,50,10)
+numplayers<-c(30,30,30,30,70,20)
 
 positionspitchers<-c("sp","rp")
 numpitchers<-c(100,40)
@@ -147,13 +144,9 @@ for (i in positions){
 
 
 
-j<-0
-i<-"sp"
-for (i in positionspitchers){
-  url<-paste("https://www.fantasypros.com/mlb/projections/",i,".php",sep='')
+  url<-paste("https://www.fantasypros.com/mlb/projections/rp.php",sep='')
   
-  j<-j+1
-  n<-numpitchers[j]
+  n<-40
   
   pitchers <- url %>%
     html() %>%
@@ -167,8 +160,8 @@ for (i in positionspitchers){
   
   pitchers<-pitchers %>%
     mutate(POS=paste(i,sep=''),
-           ERAscaled=scale(ERA,center=TRUE, scale=TRUE)[,],
-           WHIPscaled=scale(WHIP,center=TRUE, scale=TRUE)[,],
+           ERAscaled=-scale(ERA,center=TRUE, scale=TRUE)[,],
+           WHIPscaled=-scale(WHIP,center=TRUE, scale=TRUE)[,],
            Kscaled=scale(K,center=TRUE, scale=TRUE)[,],
            Wscaled=scale(W,center=TRUE, scale=TRUE)[,],
            SVscaled=scale(SV,center=TRUE, scale=TRUE)[,],
@@ -176,27 +169,54 @@ for (i in positionspitchers){
            KSGP=K/as.numeric(KSDG),
            WSGP=W/as.numeric(WSDG),
            SVSGP=SV/as.numeric(SVSDG)) 
-  pitchers<- pitchers %>%
+  posrp<- pitchers %>%
     mutate(totalScaled=ERAscaled+WHIPscaled+Kscaled+SVscaled+Wscaled)
   
+  url<-paste("https://www.fantasypros.com/mlb/projections/sp.php",sep='')
   
-  nam <- paste("pos",i, sep = "")
-  assign(nam, pitchers)
+  n<-100
   
-}
-
-
-
+  pitchers <- url %>%
+    html() %>%
+    html_nodes(xpath=xpathpath) %>%
+    html_table(fill=TRUE)
+  pitchers <- pitchers[[1]]
+  pitchers<-head(pitchers,n=n)
+  pitchers$POSRANK<-seq.int(nrow(pitchers))
+  #pitchers<-pitchers[,-c(17,18)]
+  
+  
+  pitchers<-pitchers %>%
+    mutate(POS=paste(i,sep=''),
+           ERAscaled=-scale(ERA,center=TRUE, scale=TRUE)[,],
+           WHIPscaled=-scale(WHIP,center=TRUE, scale=TRUE)[,],
+           Kscaled=scale(K,center=TRUE, scale=TRUE)[,],
+           Wscaled=scale(W,center=TRUE, scale=TRUE)[,],
+           SV=0,
+           SVscaled=0,
+           SVSGP=0,
+           #OBPSGP=OBP/OBPSDG,
+           KSGP=K/as.numeric(KSDG),
+           WSGP=W/as.numeric(WSDG))
+  possp<- pitchers %>%
+    mutate(totalScaled=ERAscaled+WHIPscaled+Kscaled+Wscaled)
+  
+OverallPitchers<-bind_rows(possp,posrp)
 
 
 Overall<-bind_rows(pos1b,pos2b,pos3b,posss,posc,posof)%>%
   arrange(-totalScaled)
 
-ForCalcs<-Overall[!duplicated(Overall$Player),]%>%
-  head(100)
 
-totalAB<-mean(ForCalcs$AB)*10
-totalOB<-totalAB*(mean(standings$OBP))
+ForCalcs<-Overall[!duplicated(Overall$Player),]%>%
+  head(90)
+
+totalAB<-mean(ForCalcs$AB+ForCalcs$BB)*9
+totalOB<-mean(ForCalcs$H+ForCalcs$BB)*9
+totalOB/totalAB
+mean(ForCalcs$OBP)
+
+
 playerAB<-mean(ForCalcs$AB)
 playerOB<-mean(ForCalcs$AB)*(mean(standings$OBP))
 
@@ -205,7 +225,7 @@ calcOB<-totalOB-playerOB
 
 Overall<-Overall%>%
   mutate(calcOBP=(H+BB)/(AB+BB),
-    OBPSGP=((H+BB+calcOB)/(BB+calcAB+AB)-mean(standings$OBP))/OBPSDG,
+    OBPSGP=((H+BB+totalOB)/(BB+totalAB+AB)-mean(standings$OBP))/OBPSDG,
     totalSGP=RSGP+HRSGP+RBISGP+SBSGP+OBPSGP)
 
 Overall<-Overall[!duplicated(Overall$Player),]
