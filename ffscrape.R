@@ -65,7 +65,7 @@ RB <- rburl %>%
 RB <- RB[[1]]
 names(RB) <- c("Name","rushAtt_fp","rush_yds","rush_tds","rec","rec_yds","rec_tds","FL","pts")
 RB<-RB[-c(1,2), ] 
-RB<-head(RB,n=50)
+RB<-head(RB,n=60)
 RB$POS<-'RB'
 RB$POSRANK<-seq.int(nrow(RB))
 
@@ -187,7 +187,7 @@ Alldata$EXPPTS <- (Alldata$pass_yds)/25+
   (Alldata$pass_tds*4)+
   (Alldata$rush_yds/10)+
   (Alldata$rush_tds*6)+
-  (Alldata$rec/4)+
+  (Alldata$rec/2)+
   (Alldata$rec_yds)/10+
   (Alldata$rec_tds)*6-
   ((Alldata$FL)*2+(Alldata$pass_int*2))
@@ -221,7 +221,7 @@ RBRep<-AlldataRB$EXPPTS[40]
 AlldataRB$VoRP<-AlldataRB$EXPPTS-RBRep
 
 AlldataWR<-Alldata[Alldata$POS=="WR",]
-WRRep<-AlldataWR$EXPPTS[40]
+WRRep<-AlldataWR$EXPPTS[50]
 AlldataWR$VoRP<-AlldataWR$EXPPTS-WRRep
 
 AlldataTE<-Alldata[Alldata$POS=="TE",]
