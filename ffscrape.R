@@ -3,7 +3,7 @@
 setwd("C:/Users/rcarder/Documents/dev/ffcheatsheet")
 
 #install.packages("rvest")
-#install.packages("BAMMtools")
+install.packages("BAMMtools")
 #install.packages("readr")
 
 library(rvest)
@@ -46,8 +46,10 @@ teurl <- "https://www.fantasypros.com/nfl/projections/te.php?week=draft"
 
 xpathpath<-'//*[@id="data"]'
 
+
+
 QB <- qburl %>%
-html() %>%
+read_html() %>%
 html_nodes(xpath=xpathpath) %>%
 html_table()
 QB <- QB[[1]]
@@ -59,7 +61,7 @@ QB$POSRANK<-seq.int(nrow(QB))
 
 
 RB <- rburl %>%
-  html() %>%
+  read_html() %>%
   html_nodes(xpath=xpathpath) %>%
   html_table()
 RB <- RB[[1]]
@@ -70,7 +72,7 @@ RB$POS<-'RB'
 RB$POSRANK<-seq.int(nrow(RB))
 
 WR <- wrurl %>%
-  html() %>%
+  read_html() %>%
   html_nodes(xpath=xpathpath) %>%
   html_table()
 WR <- WR[[1]]
@@ -81,7 +83,7 @@ WR$POS<-'WR'
 WR$POSRANK<-seq.int(nrow(WR))
 
 TE <- teurl %>%
-  html() %>%
+  read_html() %>%
   html_nodes(xpath=xpathpath) %>%
   html_table()
 TE <- TE[[1]]
@@ -167,7 +169,7 @@ ESPN$Name[ESPN$Name=="Mark Ingram II"]<-"Mark Ingram"
 Alldata<-FFPROS
 
 
-Alldata <- left_join(FFPROS,ESPN, by=c("Name","Name"))
+#Alldata <- left_join(FFPROS,ESPN, by=c("Name","Name"))
 
 
 ##Remove columns and set to numeric
