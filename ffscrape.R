@@ -3,7 +3,7 @@
 setwd("C:/Users/rcarder/Documents/dev/ffcheatsheet")
 
 #install.packages("rvest")
-install.packages("BAMMtools")
+install.packages("jsonlite")
 #install.packages("readr")
 
 library(rvest)
@@ -55,7 +55,7 @@ html_table()
 QB <- QB[[1]]
 names(QB) <- c("Name","passAtt_fp","passcomp_fp","pass_yds","pass_tds","pass_int","rushAtt_fp","rush_yds","rush_tds","FL","pts")
 QB<-QB[-c(1,2), ] 
-QB<-head(QB,n=25)
+QB<-head(QB,n=35)
 QB$POS<-'QB'
 QB$POSRANK<-seq.int(nrow(QB))
 
@@ -99,73 +99,73 @@ FFPROS<-FFPROS %>%
   separate(Name, sep = -3, into = c("Name", "Team")) %>%
   mutate_all(funs(str_trim(.)))
 
-
-##Scrape from ESPN
-
-espnurl1<-'https://fantasy.espn.com/football/players/projections'
-espnurl2<-'http://games.espn.com/ffl/tools/projections?&startIndex=40'
-espnurl3<-'http://games.espn.com/ffl/tools/projections?&startIndex=80'
-espnurl4<-'http://games.espn.com/ffl/tools/projections?&startIndex=120'
-espnurl5<-'http://games.espn.com/ffl/tools/projections?&startIndex=160'
-espnurl6<-'http://games.espn.com/ffl/tools/projections?&startIndex=200'
-espnxpath<-'//*[@id="playertable_0"]'
-
-ESPN1 <- espnurl1 %>%
-  html() %>%
-  html_nodes(xpath=espnxpath) %>%
-  html_table()
-ESPN1 <- ESPN1[[1]]
-
-ESPN2 <- espnurl2 %>%
-  html() %>%
-  html_nodes(xpath=espnxpath) %>%
-  html_table()
-ESPN2 <- ESPN2[[1]]
-
-ESPN3 <- espnurl3 %>%
-  html() %>%
-  html_nodes(xpath=espnxpath) %>%
-  html_table()
-ESPN3 <- ESPN3[[1]]
-
-ESPN4 <- espnurl4 %>%
-  html() %>%
-  html_nodes(xpath=espnxpath) %>%
-  html_table()
-ESPN4 <- ESPN4[[1]]
-
-ESPN5 <- espnurl5 %>%
-  html() %>%
-  html_nodes(xpath=espnxpath) %>%
-  html_table()
-ESPN5 <- ESPN5[[1]]
-
-ESPN6 <- espnurl6 %>%
-  html() %>%
-  html_nodes(xpath=espnxpath) %>%
-  html_table()
-ESPN6 <- ESPN6[[1]]
-
-ESPN<-rbind(ESPN1,ESPN2,ESPN3,ESPN4,ESPN5,ESPN6)
-ESPN<-ESPN[-c(1), ] 
-names(ESPN) <- c("Rank","Name","compatt","ESPN_pass_yds","ESPN_pass_tds","ESPN_pass_ints","rush","ESPN_rush_yds","ESPN_rush_tds","ESPN_rec","ESPN_rec_yds","ESPN_rec_tds","pts")
-
-ESPN<-ESPN %>%
-  separate(Name, sep =",",into = c("Name","teamposition")) %>%
-  separate(teamposition, sep =4,into = c("Teamno","positionno")) %>%
-  mutate_all(funs(str_trim(.)))
-
-
-ESPN$Name[ESPN$Name=="Todd Gurley II"]<-"Todd Gurley"
-ESPN$Name[ESPN$Name=="Will Fuller V"]<-"Will Fuller"
-ESPN$Name[ESPN$Name=="Duke Johnson Jr."]<-"Duke Johnson"
-ESPN$Name[ESPN$Name=="Marvin Jones Jr."]<-"Marvin Jones"
-ESPN$Name[ESPN$Name=="Alshon Jeffery*."]<-"Alshon Jeffery"
-ESPN$Name[ESPN$Name=="DeVante Parker"]<-"Devante Parker"
-ESPN$Name[ESPN$Name=="Mark Ingram II"]<-"Mark Ingram"
-
-
-##Bind
+# 
+# ##Scrape from ESPN
+# 
+# espnurl1<-'https://fantasy.espn.com/football/players/projections'
+# espnurl2<-'http://games.espn.com/ffl/tools/projections?&startIndex=40'
+# espnurl3<-'http://games.espn.com/ffl/tools/projections?&startIndex=80'
+# espnurl4<-'http://games.espn.com/ffl/tools/projections?&startIndex=120'
+# espnurl5<-'http://games.espn.com/ffl/tools/projections?&startIndex=160'
+# espnurl6<-'http://games.espn.com/ffl/tools/projections?&startIndex=200'
+# espnxpath<-'//*[@id="playertable_0"]'
+# 
+# ESPN1 <- espnurl1 %>%
+#   html() %>%
+#   html_nodes(xpath=espnxpath) %>%
+#   html_table()
+# ESPN1 <- ESPN1[[1]]
+# 
+# ESPN2 <- espnurl2 %>%
+#   html() %>%
+#   html_nodes(xpath=espnxpath) %>%
+#   html_table()
+# ESPN2 <- ESPN2[[1]]
+# 
+# ESPN3 <- espnurl3 %>%
+#   html() %>%
+#   html_nodes(xpath=espnxpath) %>%
+#   html_table()
+# ESPN3 <- ESPN3[[1]]
+# 
+# ESPN4 <- espnurl4 %>%
+#   html() %>%
+#   html_nodes(xpath=espnxpath) %>%
+#   html_table()
+# ESPN4 <- ESPN4[[1]]
+# 
+# ESPN5 <- espnurl5 %>%
+#   html() %>%
+#   html_nodes(xpath=espnxpath) %>%
+#   html_table()
+# ESPN5 <- ESPN5[[1]]
+# 
+# ESPN6 <- espnurl6 %>%
+#   html() %>%
+#   html_nodes(xpath=espnxpath) %>%
+#   html_table()
+# ESPN6 <- ESPN6[[1]]
+# 
+# ESPN<-rbind(ESPN1,ESPN2,ESPN3,ESPN4,ESPN5,ESPN6)
+# ESPN<-ESPN[-c(1), ] 
+# names(ESPN) <- c("Rank","Name","compatt","ESPN_pass_yds","ESPN_pass_tds","ESPN_pass_ints","rush","ESPN_rush_yds","ESPN_rush_tds","ESPN_rec","ESPN_rec_yds","ESPN_rec_tds","pts")
+# 
+# ESPN<-ESPN %>%
+#   separate(Name, sep =",",into = c("Name","teamposition")) %>%
+#   separate(teamposition, sep =4,into = c("Teamno","positionno")) %>%
+#   mutate_all(funs(str_trim(.)))
+# 
+# 
+# ESPN$Name[ESPN$Name=="Todd Gurley II"]<-"Todd Gurley"
+# ESPN$Name[ESPN$Name=="Will Fuller V"]<-"Will Fuller"
+# ESPN$Name[ESPN$Name=="Duke Johnson Jr."]<-"Duke Johnson"
+# ESPN$Name[ESPN$Name=="Marvin Jones Jr."]<-"Marvin Jones"
+# ESPN$Name[ESPN$Name=="Alshon Jeffery*."]<-"Alshon Jeffery"
+# ESPN$Name[ESPN$Name=="DeVante Parker"]<-"Devante Parker"
+# ESPN$Name[ESPN$Name=="Mark Ingram II"]<-"Mark Ingram"
+# 
+# 
+# ##Bind
 Alldata<-FFPROS
 
 
@@ -215,19 +215,19 @@ Alldata$ESPN <- (Alldata$ESPN_pass_yds)/25+
 
 
 AlldataQB<-Alldata[Alldata$POS=="QB",]
-QBRep<-AlldataQB$EXPPTS[15]
+QBRep<-AlldataQB$EXPPTS[30]
 AlldataQB$VoRP<-AlldataQB$EXPPTS-QBRep
 
 AlldataRB<-Alldata[Alldata$POS=="RB",]
-RBRep<-AlldataRB$EXPPTS[40]
+RBRep<-AlldataRB$EXPPTS[42]
 AlldataRB$VoRP<-AlldataRB$EXPPTS-RBRep
 
 AlldataWR<-Alldata[Alldata$POS=="WR",]
-WRRep<-AlldataWR$EXPPTS[50]
+WRRep<-AlldataWR$EXPPTS[42]
 AlldataWR$VoRP<-AlldataWR$EXPPTS-WRRep
 
 AlldataTE<-Alldata[Alldata$POS=="TE",]
-TERep<-AlldataTE$EXPPTS[15]
+TERep<-AlldataTE$EXPPTS[18]
 AlldataTE$VoRP<-AlldataTE$EXPPTS-TERep
 
 
@@ -241,15 +241,15 @@ AllData$ESPNOverUnder<-AllData$EXPPTS/AllData$ESPN
 
 AllData[,18:24]<-sapply(AllData[,18:24],function(x) as.numeric(gsub(",", "", x)))
 AllData$Auction[AllData$Jenks==10]<-80
-AllData$Auction[AllData$Jenks==9]<-60
-AllData$Auction[AllData$Jenks==8]<-50
-AllData$Auction[AllData$Jenks==7]<-35
-AllData$Auction[AllData$Jenks==6]<-23
-AllData$Auction[AllData$Jenks==5]<-15
-AllData$Auction[AllData$Jenks==4]<-10
-AllData$Auction[AllData$Jenks==3]<-7
-AllData$Auction[AllData$Jenks==2]<-5
-AllData$Auction[AllData$Jenks==1]<-3
+AllData$Auction[AllData$Jenks==9]<-70
+AllData$Auction[AllData$Jenks==8]<-60
+AllData$Auction[AllData$Jenks==7]<-50
+AllData$Auction[AllData$Jenks==6]<-40
+AllData$Auction[AllData$Jenks==5]<-30
+AllData$Auction[AllData$Jenks==4]<-20
+AllData$Auction[AllData$Jenks==3]<-10
+AllData$Auction[AllData$Jenks==2]<-8
+AllData$Auction[AllData$Jenks==1]<-6
 
 AllData$Tier[AllData$Jenks==10]<-1
 AllData$Tier[AllData$Jenks==9]<-2
@@ -261,6 +261,10 @@ AllData$Tier[AllData$Jenks==4]<-7
 AllData$Tier[AllData$Jenks==3]<-8
 AllData$Tier[AllData$Jenks==2]<-9
 AllData$Tier[AllData$Jenks==1]<-10
+
+AllData<-AllData%>%
+  filter(!is.na(Jenks))
+  
 
 path<-"C:/Users/rcarder/Documents/dev/ffcheatsheet/datatest.json"
 
