@@ -16,8 +16,8 @@ body, html {
 
 /* Style tab links */
 .tablink {
-    background-color: #555;
-    color: white;
+    background-color: #fff;
+    color: #555;
 
     border: none;
     outline: none;
@@ -59,8 +59,8 @@ body, html {
   }
 
    .axislabel {
-      fill: #FFFFFF;
-      color: #FFFFFF;
+      fill: #555;
+      color: #555;
       font-family: 'Montserrat', sans-serif;;
       font-size: 13px;
       }
@@ -197,7 +197,7 @@ body, html {
 
     label {
       font-weight: 2px;
-      color: #FFFFFF;
+      color: #555;
     }
 
     body {
@@ -208,7 +208,7 @@ body, html {
 
     th {
        font-family: 'Montserrat', sans-serif;;
-        color: #FFFFFF;
+        color: #555;
         width: 400px;
                 } 
     h1,h3,h4,h5,h2{
@@ -230,7 +230,7 @@ body, html {
 
     .btn-toolbar {
         font-weight: 2px;
-      color: #FFFFFF;
+      color: #555;
     }
 
     
