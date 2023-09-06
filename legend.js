@@ -12,7 +12,7 @@ var legend1=d3.selectAll('.legend').append('svg').append('g')  ;
       .attr('x',30)
       .attr('y',25)
       .attr('class','legendtext')
-      .text('Tier 1').style('fill','#CECECE');
+      .text('Tier 1').style('fill','#555');
 
     var legend2=d3.selectAll('.legend').select('svg').append('g')
 
@@ -29,7 +29,7 @@ var legend1=d3.selectAll('.legend').append('svg').append('g')  ;
       .attr('y',45)
       .attr('class','legendtext')
       .text('Tier 2')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
   var legend3=d3.selectAll('.legend').select('svg').append('g')
 
@@ -46,7 +46,7 @@ var legend1=d3.selectAll('.legend').append('svg').append('g')  ;
       .attr('y',65)
       .attr('class','legendtext')
       .text('Tier 3')
-       .style('fill','#CECECE');
+       .style('fill','#555');
   
     var legend4=d3.selectAll('.legend').select('svg').append('g')      .attr('class','legendtext') 
 
@@ -63,7 +63,7 @@ var legend1=d3.selectAll('.legend').append('svg').append('g')  ;
       .attr('y',85)
       .attr('class','legendtext')
       .text('Tier 4')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
 
 var legend5=d3.selectAll('.legend').select('svg').append('g')
@@ -81,7 +81,7 @@ var legend5=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',105)
       .attr('class','legendtext')
       .text('Tier 5')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
 var legend6=d3.selectAll('.legend').select('svg').append('g')
 
@@ -98,7 +98,7 @@ var legend6=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',125)
       .attr('class','legendtext')
       .text('Tier 6')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
 var legend7=d3.selectAll('.legend').select('svg').append('g')
 
@@ -115,7 +115,7 @@ var legend7=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',145)
       .attr('class','legendtext')
       .text('Tier 7')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
 var legend8=d3.selectAll('.legend').select('svg')
   .attr('height',310)
@@ -135,7 +135,7 @@ var legend8=d3.selectAll('.legend').select('svg')
       .attr('y',165)
       .attr('class','legendtext')
       .text('Tier 8')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
 var legend9=d3.selectAll('.legend').select('svg').append('g')
 
@@ -152,7 +152,7 @@ var legend9=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',185)
       .attr('class','legendtext')
       .text('Tier 9')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
 var legend10=d3.selectAll('.legend').select('svg').append('g')
 
@@ -169,7 +169,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',205)
       .attr('class','legendtext')
       .text('Tier 10')
-       .style('fill','#CECECE');
+       .style('fill','#555');
 
   var legend11=d3.selectAll('.legend').select('svg').append('g')
 
@@ -180,7 +180,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
        .attr('cy',230)
        .attr('r',10)
        .style('fill','none')
-       .style('stroke','#CECECE');
+       .style('stroke','#555');
 
     legend11
       .append('text')
@@ -188,7 +188,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',235)
       .attr('class','legendtext')
       .text('$65 Value')
-      .style('fill','#CECECE');
+      .style('fill','#555');
 
    var legend12=d3.selectAll('.legend').select('svg').append('g')
 
@@ -199,7 +199,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
        .attr('cy',257)
        .attr('r',7.26495)
        .style('fill','none')
-       .style('stroke','#CECECE');
+       .style('stroke','#555');
 
     legend12
       .append('text')
@@ -207,7 +207,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',262)
       .attr('class','legendtext')
       .text('$35 Value')
-      .style('fill','#CECECE');
+      .style('fill','#555');
 
      var legend13=d3.selectAll('.legend').select('svg').append('g')
 
@@ -218,7 +218,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
        .attr('cy',281)
        .attr('r',4.66127)
        .style('fill','none')
-       .style('stroke','#CECECE');
+       .style('stroke','#555');
 
     legend13
       .append('text')
@@ -226,7 +226,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',286)
       .attr('class','legendtext')
       .text('$15 Value')
-      .style('fill','#CECECE');
+      .style('fill','#555');
 
        var legend14=d3.selectAll('.legend').select('svg').append('g')
 
@@ -237,7 +237,7 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
        .attr('cy',303)
        .attr('r',2.27438)
        .style('fill','none')
-       .style('stroke','#CECECE');
+       .style('stroke','#555');
 
     legend14
       .append('text')
@@ -245,6 +245,6 @@ var legend10=d3.selectAll('.legend').select('svg').append('g')
       .attr('y',308)
       .attr('class','legendtext')
       .text('$7 Value')
-      .style('fill','#CECECE');
+      .style('fill','#555');
 
 
