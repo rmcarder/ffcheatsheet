@@ -201,9 +201,9 @@ body, html {
     }
 
     body {
-      background-color: #303030;
+      background-color: #fff;
       font-family: 'Montserrat', sans-serif;;
-      color: #CECECE;
+      color: #555;
           }
 
     th {
@@ -216,7 +216,7 @@ body, html {
         color: #3288bd;
                 }   
     #Jenks,#team {
-      background-color: #CECECE;
+      background-color: #fff;
       color: #4C4C4C;
       border: none;
       border-radius: 24px;
@@ -224,7 +224,7 @@ body, html {
     .axis path,
     .axis line {
       fill: none;
-      stroke: #CECECE;
+      stroke: #555;
       shape-rendering: crispEdges;
                 }
 

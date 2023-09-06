@@ -194,40 +194,54 @@ Alldata$EXPPTS <- (Alldata$pass_yds)/25+
   (Alldata$rec_tds)*6-
   ((Alldata$FL)*2+(Alldata$pass_int*2))
 
+# 
+# Alldata$ESPNPTS <- (Alldata$pass_yds)/25+
+#   (Alldata$pass_tds*4)+
+#   (Alldata$rush_yds/10)+
+#   (Alldata$rush_tds*6)+
+#   (Alldata$rec/4)+
+#   (Alldata$rec_yds)/10+
+#   (Alldata$rec_tds)*6-
+#   ((Alldata$FL)*2+(Alldata$pass_int*2))
+# 
+# Alldata$ESPN <- (Alldata$ESPN_pass_yds)/25+
+#   (Alldata$ESPN_pass_tds*4)+
+#   (Alldata$ESPN_rush_yds/10)+
+#   (Alldata$ESPN_rush_tds*6)+
+#   (Alldata$ESPN_rec/4)+
+#   (Alldata$ESPN_rec_yds)/10+
+#   (Alldata$ESPN_rec_tds)*6-
+#   ((Alldata$FL)*2+(Alldata$ESPN_pass_int*2))
 
-Alldata$ESPNPTS <- (Alldata$pass_yds)/25+
-  (Alldata$pass_tds*4)+
-  (Alldata$rush_yds/10)+
-  (Alldata$rush_tds*6)+
-  (Alldata$rec/4)+
-  (Alldata$rec_yds)/10+
-  (Alldata$rec_tds)*6-
-  ((Alldata$FL)*2+(Alldata$pass_int*2))
 
-Alldata$ESPN <- (Alldata$ESPN_pass_yds)/25+
-  (Alldata$ESPN_pass_tds*4)+
-  (Alldata$ESPN_rush_yds/10)+
-  (Alldata$ESPN_rush_tds*6)+
-  (Alldata$ESPN_rec/4)+
-  (Alldata$ESPN_rec_yds)/10+
-  (Alldata$ESPN_rec_tds)*6-
-  ((Alldata$FL)*2+(Alldata$ESPN_pass_int*2))
-
-
-AlldataQB<-Alldata[Alldata$POS=="QB",]
+AlldataQB<-Alldata%>%
+  filter(POS=="QB")%>%
+  arrange(-EXPPTS)%>%
+  mutate(POSRANK=row_number())
 QBRep<-AlldataQB$EXPPTS[30]
 AlldataQB$VoRP<-AlldataQB$EXPPTS-QBRep
 
-AlldataRB<-Alldata[Alldata$POS=="RB",]
-RBRep<-AlldataRB$EXPPTS[42]
+AlldataRB<-Alldata%>%
+  filter(POS=="RB")%>%
+  arrange(-EXPPTS)%>%
+  mutate(POSRANK=row_number())
+RBRep<-AlldataRB$EXPPTS[38]
 AlldataRB$VoRP<-AlldataRB$EXPPTS-RBRep
 
-AlldataWR<-Alldata[Alldata$POS=="WR",]
-WRRep<-AlldataWR$EXPPTS[42]
+#10*12-30-38-52
+
+AlldataWR<-Alldata%>%
+  filter(POS=="WR")%>%
+  arrange(-EXPPTS)%>%
+  mutate(POSRANK=row_number())
+WRRep<-AlldataWR$EXPPTS[52]
 AlldataWR$VoRP<-AlldataWR$EXPPTS-WRRep
 
-AlldataTE<-Alldata[Alldata$POS=="TE",]
-TERep<-AlldataTE$EXPPTS[18]
+AlldataTE<-Alldata%>%
+  filter(POS=="TE")%>%
+  arrange(-EXPPTS)%>%
+  mutate(POSRANK=row_number())
+TERep<-AlldataTE$EXPPTS[15]
 AlldataTE$VoRP<-AlldataTE$EXPPTS-TERep
 
 
@@ -237,9 +251,9 @@ breaks<-getJenksBreaks(AllData$VoRP,11)
 
 AllData$Jenks<-cut(AllData$VoRP, breaks = breaks, labels=as.character(1:10))
 
-AllData$ESPNOverUnder<-AllData$EXPPTS/AllData$ESPN
+#AllData$ESPNOverUnder<-AllData$EXPPTS/AllData$ESPN
 
-AllData[,18:24]<-sapply(AllData[,18:24],function(x) as.numeric(gsub(",", "", x)))
+#AllData[,18:24]<-sapply(AllData[,18:24],function(x) as.numeric(gsub(",", "", x)))
 AllData$Auction[AllData$Jenks==10]<-80
 AllData$Auction[AllData$Jenks==9]<-70
 AllData$Auction[AllData$Jenks==8]<-60
