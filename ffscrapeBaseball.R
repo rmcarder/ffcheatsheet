@@ -2,7 +2,7 @@
 
 setwd("C:/Users/rcarder/Documents/dev/ffcheatsheet")
 
-#install.packages("rvest")
+install.packages("rvest")
 #install.packages("BAMMtools")
 #install.packages("readr")
 
@@ -105,14 +105,20 @@ xpathpath<-'//*[@id="data"]'
 
 j<-0
 
+
+
+
 for (i in positions){
+  
   url<-paste("https://www.fantasypros.com/mlb/projections/",i,".php",sep='')
   
   j<-j+1
   n<-numplayers[j]
   
+
+  
   hitters <- url %>%
-    html() %>%
+    read_html() %>%
     html_nodes(xpath=xpathpath) %>%
     html_table(fill=TRUE)
   hitters <- hitters[[1]]
@@ -149,13 +155,13 @@ for (i in positions){
   n<-40
   
   pitchers <- url %>%
-    html() %>%
+    read_html() %>%
     html_nodes(xpath=xpathpath) %>%
     html_table(fill=TRUE)
   pitchers <- pitchers[[1]]
   pitchers<-head(pitchers,n=n)
   pitchers$POSRANK<-seq.int(nrow(pitchers))
-  #pitchers<-pitchers[,-c(17,18)]
+  pitchers<-pitchers[,-c(17,18)]
   
   
   pitchers<-pitchers %>%
@@ -163,27 +169,24 @@ for (i in positions){
            ERAscaled=-scale(ERA,center=TRUE, scale=TRUE)[,],
            WHIPscaled=-scale(WHIP,center=TRUE, scale=TRUE)[,],
            Kscaled=scale(K,center=TRUE, scale=TRUE)[,],
-           Wscaled=scale(W,center=TRUE, scale=TRUE)[,],
            SVscaled=scale(SV,center=TRUE, scale=TRUE)[,],
            #OBPSGP=OBP/OBPSDG,
-           KSGP=K/as.numeric(KSDG),
-           WSGP=W/as.numeric(WSDG),
            SVSGP=SV/as.numeric(SVSDG)) 
   posrp<- pitchers %>%
-    mutate(totalScaled=ERAscaled+WHIPscaled+Kscaled+SVscaled+Wscaled)
+    mutate(totalScaled=ERAscaled+WHIPscaled+Kscaled+SVscaled)
   
   url<-paste("https://www.fantasypros.com/mlb/projections/sp.php",sep='')
   
   n<-100
   
   pitchers <- url %>%
-    html() %>%
+    read_html() %>%
     html_nodes(xpath=xpathpath) %>%
     html_table(fill=TRUE)
   pitchers <- pitchers[[1]]
   pitchers<-head(pitchers,n=n)
   pitchers$POSRANK<-seq.int(nrow(pitchers))
-  #pitchers<-pitchers[,-c(17,18)]
+  pitchers<-pitchers[,-c(17,18)]
   
   
   pitchers<-pitchers %>%
@@ -191,15 +194,15 @@ for (i in positions){
            ERAscaled=-scale(ERA,center=TRUE, scale=TRUE)[,],
            WHIPscaled=-scale(WHIP,center=TRUE, scale=TRUE)[,],
            Kscaled=scale(K,center=TRUE, scale=TRUE)[,],
-           Wscaled=scale(W,center=TRUE, scale=TRUE)[,],
+           QSscaled=scale(QS,center=TRUE, scale=TRUE)[,],
            SV=0,
            SVscaled=0,
            SVSGP=0,
            #OBPSGP=OBP/OBPSDG,
            KSGP=K/as.numeric(KSDG),
-           WSGP=W/as.numeric(WSDG))
+           QSSGP=QS/as.numeric(WSDG))
   possp<- pitchers %>%
-    mutate(totalScaled=ERAscaled+WHIPscaled+Kscaled+Wscaled)
+    mutate(totalScaled=ERAscaled+WHIPscaled+Kscaled+QSscaled)
   
 OverallPitchers<-bind_rows(possp,posrp)
 
@@ -259,6 +262,7 @@ AllData$Tier[AllData$Jenks==1]<-10
 
 
 write.csv(AllData,"AllData.csv", row.names = FALSE)
+write.csv(OverallPitchers,"Pitchers.csv", row.names = FALSE)
 
 path<-"C:/Users/rcarder/Documents/dev/ffcheatsheet/baseballdatatest.json"
 
