@@ -46,7 +46,7 @@ data.forEach(function(d) {
 
 
     var vorps = [
-       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus VoRP', '.f', ',0s',-20,150,0,32),
+       new Vorp('#chart1vorp',QBData, 'POSRANK', 'Position Rank', 'VoRP','QB Expert Consensus VoRP', '.f', ',0s',-20,150,0,30),
        new Vorp('#chart2vorp',RBData, 'POSRANK', 'Position Rank', 'VoRP', 'RB Expert Consensus VoRP', '.0s', ',0s',-20,190,0,45),
        new Vorp('#chart3vorp',WRData, 'POSRANK', 'Position Rank', 'VoRP', 'WR Expert Consensus VoRP', '.0s', ',0s',-20,150,0,65),
        new Vorp('#chart4vorp',TEData, 'POSRANK', 'Position Rank', 'VoRP', 'TE Expert Consensus VoRP', '.0s', ',0s',-20,100,0,18)
