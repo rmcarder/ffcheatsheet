@@ -3,7 +3,7 @@
 setwd("C:/Users/rcarder/Documents/dev/ffcheatsheet")
 
 #install.packages("rvest")
-install.packages("jsonlite")
+#install.packages("jsonlite")
 #install.packages("readr")
 
 library(rvest)
@@ -175,7 +175,7 @@ Alldata<-FFPROS
 ##Remove columns and set to numeric
 Alldata[,3:12]<-sapply(Alldata[,3:12],function(x) as.numeric(gsub(",", "", x)))
 Alldata[,14:17]<-sapply(Alldata[,14:17],function(x) as.numeric(gsub(",", "", x)))
-Alldata[,21:31]<-sapply(Alldata[,21:31],function(x) as.numeric(gsub(",", "", x)))
+#Alldata[,21:31]<-sapply(Alldata[,21:31],function(x) as.numeric(gsub(",", "", x)))
 
 Alldata[is.na(Alldata)] <- 0
 
@@ -212,6 +212,8 @@ Alldata$EXPPTS <- (Alldata$pass_yds)/25+
 #   (Alldata$ESPN_rec_yds)/10+
 #   (Alldata$ESPN_rec_tds)*6-
 #   ((Alldata$FL)*2+(Alldata$ESPN_pass_int*2))
+#144-30-40-16
+
 
 
 AlldataQB<-Alldata%>%
@@ -234,14 +236,14 @@ AlldataWR<-Alldata%>%
   filter(POS=="WR")%>%
   arrange(-EXPPTS)%>%
   mutate(POSRANK=row_number())
-WRRep<-AlldataWR$EXPPTS[52]
+WRRep<-AlldataWR$EXPPTS[54]
 AlldataWR$VoRP<-AlldataWR$EXPPTS-WRRep
 
 AlldataTE<-Alldata%>%
   filter(POS=="TE")%>%
   arrange(-EXPPTS)%>%
   mutate(POSRANK=row_number())
-TERep<-AlldataTE$EXPPTS[15]
+TERep<-AlldataTE$EXPPTS[18]
 AlldataTE$VoRP<-AlldataTE$EXPPTS-TERep
 
 
