@@ -1,6 +1,6 @@
 
 
-setwd("C:/Users/rcarder/Documents/dev/ffcheatsheet")
+setwd("C:/Users/RichardCarder/Documents/dev/ffcheatsheet")
 
 #install.packages("rvest")
 #install.packages("jsonlite")
@@ -282,7 +282,7 @@ AllData<-AllData%>%
   filter(!is.na(Jenks))
   
 
-path<-"C:/Users/rcarder/Documents/dev/ffcheatsheet/datatest.json"
+path<-"C:/Users/RichardCarder/Documents/dev/ffcheatsheet/datatest.json"
 
 AllData %>% 
   toJSON() %>%

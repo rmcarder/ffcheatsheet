@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasy Baseball Draft Board</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #06090F;
+  --s0:       #0B1120;
+  --s1:       #0F1729;
+  --s2:       #141F35;
+  --s3:       #1A2840;
+  --bd:       #1E2F4A;
+  --bd2:      #263855;
+  --tx:       #DCE8F5;
+  --tx2:      #6B82A0;
+  --tx3:      #344E6A;
+  --acc:      #00C8FF;
+  --acc-bg:   rgba(0,200,255,0.08);
+  --acc-bg2:  rgba(0,200,255,0.14);
+
+  --C:   #F59E0B;
+  --1B:  #F87171;
+  --2B:  #FB923C;
+  --3B:  #FBBF24;
+  --SS:  #34D399;
+  --OF:  #22D3EE;
+  --SP:  #60A5FA;
+  --RP:  #C084FC;
+
+  --t1: #F59E0B;
+  --t2: #60A5FA;
+  --t3: #34D399;
+  --t4: #A78BFA;
+  --t5: #475569;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--tx);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+/* ── Layout shell ── */
+.app {
+  display: grid;
+  grid-template-rows: 48px auto auto 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--s0);
+  border-bottom: 1px solid var(--bd);
+  flex-shrink: 0;
+}
+
+.hdr-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tx);
+}
+.hdr-title em { color: var(--acc); font-style: normal; }
+
+.hdr-meta {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.hdr-stat { text-align: right; }
+.hdr-stat-lbl {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tx3);
+  font-family: 'Barlow Condensed', sans-serif;
+}
+.hdr-stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  color: var(--acc);
+  line-height: 1;
+}
+
+/* ── Scatter row ── */
+.scatter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bd);
+  gap: 1px;
+  border-bottom: 1px solid var(--bd);
+  flex-shrink: 0;
+}
+
+.scatter-panel {
+  background: var(--s0);
+  padding: 10px 14px 8px;
+}
+
+.scatter-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tx3);
+  margin-bottom: 4px;
+}
+
+.scatter-svg { display: block; width: 100%; }
+
+.scatter-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--tx2);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.06em;
+}
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Controls ── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: var(--s1);
+  border-bottom: 1px solid var(--bd);
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.ctrl-lbl {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tx3);
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+.pills { display: flex; gap: 3px; flex-wrap: wrap; }
+
+.pill {
+  padding: 2px 9px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: 1px solid var(--bd2);
+  background: var(--s2);
+  color: var(--tx2);
+  transition: all 0.12s;
+  user-select: none;
+}
+.pill:hover { color: var(--tx); border-color: var(--bd2); }
+.pill.active { color: var(--bg); border-color: transparent; }
+.pill[data-pos="ALL"].active  { background: var(--acc); }
+.pill[data-pos="C"].active    { background: var(--C); }
+.pill[data-pos="1B"].active   { background: var(--1B); }
+.pill[data-pos="2B"].active   { background: var(--2B); }
+.pill[data-pos="3B"].active   { background: var(--3B); }
+.pill[data-pos="SS"].active   { background: var(--SS); }
+.pill[data-pos="OF"].active   { background: var(--OF); }
+.pill[data-pos="SP"].active   { background: var(--SP); }
+.pill[data-pos="RP"].active   { background: var(--RP); }
+
+.sep { width: 1px; height: 18px; background: var(--bd); flex-shrink: 0; }
+
+.drafted-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--tx2);
+  user-select: none;
+}
+.tog-box {
+  width: 13px; height: 13px;
+  border: 1px solid var(--bd2);
+  border-radius: 2px;
+  background: var(--s2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: transparent;
+  transition: all 0.12s;
+}
+.tog-box.on { background: var(--acc); border-color: var(--acc); color: var(--bg); }
+
+.ctrl-right {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--tx2);
+}
+.ctrl-right b { color: var(--acc); font-weight: 500; }
+
+/* ── Table ── */
+.tbl-wrap {
+  overflow: auto;
+  background: var(--s0);
+  min-height: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  table-layout: fixed;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--s2);
+}
+
+th {
+  padding: 7px 8px;
+  text-align: right;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tx2);
+  border-bottom: 1px solid var(--bd);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s;
+}
+th:hover { color: var(--tx); }
+th.sa   { color: var(--acc); }
+th.lft  { text-align: left; }
+.si { display: inline-block; margin-left: 2px; opacity: 0.35; font-size: 8px; }
+th.sa .si { opacity: 1; }
+
+/* Sticky cols */
+th:nth-child(1), td:nth-child(1) { position: sticky; left: 0;    z-index: 5; width: 36px;  text-align: center; }
+th:nth-child(2), td:nth-child(2) { position: sticky; left: 36px; z-index: 5; width: 190px; text-align: left;   }
+th:nth-child(3), td:nth-child(3) { position: sticky; left: 226px;z-index: 5; width: 52px;  text-align: left;   }
+
+thead th:nth-child(1),
+thead th:nth-child(2),
+thead th:nth-child(3) { background: var(--s2); }
+
+tbody tr td:nth-child(1),
+tbody tr td:nth-child(2),
+tbody tr td:nth-child(3) { background: inherit; }
+
+tbody tr { background: var(--s0); border-bottom: 1px solid var(--bd); transition: background 0.08s; }
+tbody tr:nth-child(even) { background: var(--s1); }
+tbody tr:hover, tbody tr.hl { background: var(--acc-bg2) !important; }
+tbody tr.drafted { opacity: 0.3; }
+
+td {
+  padding: 5px 8px;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--tx);
+}
+td.rank { text-align: center; color: var(--tx3); font-size: 10px; }
+td.pcell { font-family: 'DM Sans', sans-serif; padding: 3px 8px; }
+.pname { font-size: 12px; font-weight: 500; color: var(--tx); line-height: 1.3; }
+.pteam { font-size: 9px; color: var(--tx2); font-weight: 300; }
+
+/* Position pill */
+.pp {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 99px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #06090F;
+  letter-spacing: 0.04em;
+}
+.pp-C   { background: var(--C);  }
+.pp-1B  { background: var(--1B); }
+.pp-2B  { background: var(--2B); }
+.pp-3B  { background: var(--3B); }
+.pp-SS  { background: var(--SS); }
+.pp-OF  { background: var(--OF); }
+.pp-SP  { background: var(--SP); }
+.pp-RP  { background: var(--RP); }
+
+/* Tier badge */
+.tb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  border-radius: 3px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #06090F;
+}
+.tb1 { background: var(--t1); }
+.tb2 { background: var(--t2); }
+.tb3 { background: var(--t3); }
+.tb4 { background: var(--t4); }
+.tb5,.tb6,.tb7,.tb8,.tb9,.tb10 { background: var(--s3); color: var(--tx2); }
+
+.pos-num { color: #34D399; }
+.neg-num { color: #F87171; }
+.dim-num { color: var(--tx3); }
+
+/* Draft button */
+.dbtn {
+  padding: 2px 9px;
+  border-radius: 3px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--bd2);
+  background: transparent;
+  color: var(--tx2);
+  transition: all 0.12s;
+  white-space: nowrap;
+}
+.dbtn:hover { background: var(--acc); border-color: var(--acc); color: var(--bg); }
+.dbtn.undraft { color: var(--tx3); border-color: var(--bd); }
+.dbtn.undraft:hover { background: #F87171; border-color: #F87171; color: var(--bg); }
+
+/* Tooltip */
+.tip {
+  position: fixed;
+  background: var(--s2);
+  border: 1px solid var(--bd2);
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 11px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s;
+  z-index: 9999;
+  min-width: 160px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.tip.show { opacity: 1; }
+.tip-name { font-weight: 500; color: var(--tx); font-size: 12px; margin-bottom: 6px; }
+.tip-team { color: var(--tx2); font-weight: 300; font-size: 10px; }
+.tip-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+.tip-k { color: var(--tx2); }
+.tip-v { color: var(--acc); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--s0); }
+::-webkit-scrollbar-thumb { background: var(--bd2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--tx3); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header class="hdr">
+    <div class="hdr-title">Fantasy Baseball &nbsp;<em>Draft Board</em></div>
+    <div class="hdr-meta">
+      <div class="hdr-stat">
+        <div class="hdr-stat-lbl">Available</div>
+        <div class="hdr-stat-val" id="s-avail">—</div>
+      </div>
+      <div class="hdr-stat">
+        <div class="hdr-stat-lbl">Drafted</div>
+        <div class="hdr-stat-val" id="s-drafted">0</div>
+      </div>
+      <div class="hdr-stat">
+        <div class="hdr-stat-lbl">Round</div>
+        <div class="hdr-stat-val" id="s-round">1</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scatter plots -->
+  <div class="scatter-row">
+    <div class="scatter-panel">
+      <div class="scatter-lbl">Hitters — Total SGP vs Value Above Replacement</div>
+      <svg id="sv-h" class="scatter-svg"></svg>
+      <div class="scatter-legend" id="leg-h"></div>
+    </div>
+    <div class="scatter-panel">
+      <div class="scatter-lbl">Pitchers — Total SGP vs Value Above Replacement</div>
+      <svg id="sv-p" class="scatter-svg"></svg>
+      <div class="scatter-legend" id="leg-p"></div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <span class="ctrl-lbl">Position</span>
+    <div class="pills" id="pos-pills">
+      <button class="pill active" data-pos="ALL">ALL</button>
+      <button class="pill" data-pos="C">C</button>
+      <button class="pill" data-pos="1B">1B</button>
+      <button class="pill" data-pos="2B">2B</button>
+      <button class="pill" data-pos="3B">3B</button>
+      <button class="pill" data-pos="SS">SS</button>
+      <button class="pill" data-pos="OF">OF</button>
+      <button class="pill" data-pos="SP">SP</button>
+      <button class="pill" data-pos="RP">RP</button>
+    </div>
+    <div class="sep"></div>
+    <div class="drafted-toggle" id="tog-wrap">
+      <div class="tog-box" id="tog">✓</div>
+      <span>Show drafted</span>
+    </div>
+    <div class="ctrl-right">
+      <b id="c-drafted">0</b> drafted &nbsp;·&nbsp; <b id="c-avail">—</b> available
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th class="lft" data-col="Player">Player <span class="si">↕</span></th>
+          <th class="lft" data-col="POS">Pos <span class="si">↕</span></th>
+          <th data-col="Tier">Tier <span class="si">↕</span></th>
+          <th data-col="Total_SGP">SGP <span class="si">↕</span></th>
+          <th data-col="VAR" class="sa">VAR <span class="si">↓</span></th>
+          <th data-col="RSGP">R <span class="si">↕</span></th>
+          <th data-col="HRSGP">HR <span class="si">↕</span></th>
+          <th data-col="RBISGP">RBI <span class="si">↕</span></th>
+          <th data-col="SBSGP">SB <span class="si">↕</span></th>
+          <th data-col="OBPSGP">OBP <span class="si">↕</span></th>
+          <th data-col="KSGP">K <span class="si">↕</span></th>
+          <th data-col="QSSGP">QS <span class="si">↕</span></th>
+          <th data-col="SVSGP">SV <span class="si">↕</span></th>
+          <th data-col="ERASGP">ERA <span class="si">↕</span></th>
+          <th data-col="WHIPSGP">WHIP <span class="si">↕</span></th>
+          <th style="width:70px"></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Tooltip -->
+<div class="tip" id="tip">
+  <div class="tip-name" id="tip-name"></div>
+  <div class="tip-grid" id="tip-grid"></div>
+</div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let ALL = [], drafted = new Set(), hovered = null;
+let sortCol = 'VAR', sortDir = 'desc', posFil = 'ALL', showDrafted = false;
+
+const POS_COLORS = {
+  C:'#F59E0B','1B':'#F87171','2B':'#FB923C','3B':'#FBBF24',
+  SS:'#34D399',OF:'#22D3EE',SP:'#60A5FA',RP:'#C084FC'
+};
+const HPOS = ['C','1B','2B','3B','SS','OF'];
+const PPOS = ['SP','RP'];
+const NUM_COLS = ['Total_SGP','VAR','Tier','OverallRank',
+  'RSGP','HRSGP','RBISGP','SBSGP','OBPSGP',
+  'KSGP','QSSGP','SVSGP','ERASGP','WHIPSGP'];
+
+// ── Data ─────────────────────────────────────────────────────────────────────
+async function boot() {
+  try {
+    const r = await fetch('./baseballdatatest_sgp.json');
+    if (!r.ok) throw new Error();
+    const j = await r.json();
+    ALL = Array.isArray(j) ? j : Object.values(j);
+  } catch {
+    ALL = sampleData();
+  }
+  ALL.forEach(d => {
+    NUM_COLS.forEach(c => d[c] = +d[c] || 0);
+    d._id = d.Player;
+  });
+  render(); setupControls();
+}
+
+function parseName(s) {
+  const m = s.match(/^(.+?)\s*\(([A-Z]+)\s*[-–]/);
+  return m ? { name: m[1].trim(), team: m[2] } : { name: s, team: '' };
+}
+
+function visible() {
+  return ALL
+    .filter(d => (showDrafted || !drafted.has(d._id)) && (posFil === 'ALL' || d.POS === posFil))
+    .sort((a,b) => {
+      const dir = sortDir === 'desc' ? -1 : 1;
+      const av = a[sortCol], bv = b[sortCol];
+      return typeof av === 'number' ? dir*(av-bv) : dir*String(av).localeCompare(String(bv));
+    });
+}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+function render() {
+  updateStats(); renderScatters(); renderTable();
+}
+
+function updateStats() {
+  const avail = ALL.length - drafted.size;
+  document.getElementById('s-avail').textContent = avail;
+  document.getElementById('s-drafted').textContent = drafted.size;
+  document.getElementById('s-round').textContent = Math.floor(drafted.size/10)+1;
+  document.getElementById('c-drafted').textContent = drafted.size;
+  document.getElementById('c-avail').textContent = avail;
+}
+
+// ── Scatters ─────────────────────────────────────────────────────────────────
+const SM = { t:10, r:16, b:34, l:40 };
+
+function renderScatters() {
+  drawScatter('sv-h','leg-h', HPOS);
+  drawScatter('sv-p','leg-p', PPOS);
+}
+
+function drawScatter(svgId, legId, positions) {
+  const panel = document.getElementById(svgId).parentElement;
+  const W = panel.clientWidth - 28, H = 190;
+  const pw = W - SM.l - SM.r, ph = H - SM.t - SM.b;
+
+  const svg = d3.select('#'+svgId).attr('width', W).attr('height', H);
+  svg.selectAll('*').remove();
+
+  const data = ALL.filter(d => positions.includes(d.POS));
+  const avail = data.filter(d => !drafted.has(d._id));
+  const gone  = data.filter(d =>  drafted.has(d._id));
+
+  const xe = d3.extent(data, d=>d.Total_SGP), ye = d3.extent(data, d=>d.VAR);
+  const xp = (xe[1]-xe[0])*0.05, yp = (ye[1]-ye[0])*0.05;
+
+  const xs = d3.scaleLinear().domain([xe[0]-xp, xe[1]+xp]).range([0, pw]);
+  const ys = d3.scaleLinear().domain([ye[0]-yp, ye[1]+yp]).range([ph, 0]);
+
+  const g = svg.append('g').attr('transform', `translate(${SM.l},${SM.t})`);
+
+  // Gridlines
+  g.append('g').selectAll('line').data(xs.ticks(5)).enter()
+    .append('line')
+    .attr('x1', d=>xs(d)).attr('x2', d=>xs(d)).attr('y1',0).attr('y2',ph)
+    .attr('stroke','#1A2840').attr('stroke-width',1);
+  g.append('g').selectAll('line').data(ys.ticks(5)).enter()
+    .append('line')
+    .attr('x1',0).attr('x2',pw).attr('y1',d=>ys(d)).attr('y2',d=>ys(d))
+    .attr('stroke','#1A2840').attr('stroke-width',1);
+
+  // Axes
+  const axStyle = ax => {
+    ax.select('.domain').attr('stroke','#1E2F4A');
+    ax.selectAll('text').attr('fill','#344E6A').attr('font-size',8).attr('font-family','JetBrains Mono,monospace');
+    ax.selectAll('line').attr('stroke','#1E2F4A');
+  };
+  g.append('g').attr('transform',`translate(0,${ph})`).call(d3.axisBottom(xs).ticks(5).tickSize(3)).call(axStyle);
+  g.append('g').call(d3.axisLeft(ys).ticks(5).tickSize(3)).call(axStyle);
+
+  // Axis labels
+  g.append('text').attr('x',pw/2).attr('y',ph+28).attr('text-anchor','middle')
+    .attr('fill','#2A3E58').attr('font-size',8).attr('font-family','Barlow Condensed,sans-serif')
+    .attr('letter-spacing','0.1em').text('TOTAL SGP');
+  g.append('text').attr('transform','rotate(-90)').attr('x',-ph/2).attr('y',-30)
+    .attr('text-anchor','middle').attr('fill','#2A3E58').attr('font-size',8)
+    .attr('font-family','Barlow Condensed,sans-serif').attr('letter-spacing','0.1em').text('VAR');
+
+  // Drafted dots (ghost rings)
+  if (showDrafted) {
+    g.append('g').selectAll('circle').data(gone).enter()
+      .append('circle')
+      .attr('cx', d=>xs(d.Total_SGP)).attr('cy', d=>ys(d.VAR))
+      .attr('r', 3.5).attr('fill','none')
+      .attr('stroke', d=>POS_COLORS[d.POS]||'#344E6A')
+      .attr('stroke-width', 1).attr('opacity', 0.25);
+  }
+
+  // Available dots
+  const tip = document.getElementById('tip');
+  g.append('g').selectAll('circle').data(avail).enter()
+    .append('circle')
+    .attr('class', d => 'dot-' + safeId(d._id))
+    .attr('cx', d=>xs(d.Total_SGP)).attr('cy', d=>ys(d.VAR))
+    .attr('r', 5)
+    .attr('fill', d=>POS_COLORS[d.POS]||'#344E6A')
+    .attr('fill-opacity', 0.72)
+    .attr('stroke', d=>POS_COLORS[d.POS]||'#344E6A')
+    .attr('stroke-width', 1)
+    .attr('stroke-opacity', 0.9)
+    .style('cursor','pointer')
+    .on('mouseover', function(event, d) {
+      hovered = d._id;
+      d3.select(this).attr('r', 9).attr('fill-opacity',1).attr('stroke-width',2.5);
+      hlRow(d._id);
+      const p = parseName(d.Player);
+      document.getElementById('tip-name').innerHTML =
+        `${p.name} <span class="tip-team">${p.team}</span>`;
+      document.getElementById('tip-grid').innerHTML = `
+        <span class="tip-k">SGP</span><span class="tip-v">${d.Total_SGP.toFixed(2)}</span>
+        <span class="tip-k">VAR</span><span class="tip-v">${d.VAR.toFixed(2)}</span>
+        <span class="tip-k">Tier</span><span class="tip-v">${d.Tier}</span>
+        <span class="tip-k">Rank</span><span class="tip-v">#${d.OverallRank}</span>
+      `;
+      tip.classList.add('show');
+    })
+    .on('mousemove', (event) => {
+      tip.style.left = (event.clientX+14)+'px';
+      tip.style.top  = (event.clientY-8)+'px';
+    })
+    .on('mouseout', function() {
+      hovered = null;
+      d3.select(this).attr('r',5).attr('fill-opacity',0.72).attr('stroke-width',1);
+      clearHlRow(); tip.classList.remove('show');
+    });
+
+  // Legend
+  document.getElementById(legId).innerHTML =
+    positions.map(p=>`<div class="legend-item">
+      <div class="legend-dot" style="background:${POS_COLORS[p]}"></div>${p}
+    </div>`).join('');
+}
+
+// ── Table ────────────────────────────────────────────────────────────────────
+function renderTable() {
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  const data = visible();
+
+  data.forEach(d => {
+    const p   = parseName(d.Player);
+    const gone = drafted.has(d._id);
+    const tr = document.createElement('tr');
+    if (gone) tr.classList.add('drafted');
+    tr.dataset.id = d._id;
+
+    tr.innerHTML = `
+      <td class="rank">${d.OverallRank}</td>
+      <td class="pcell">
+        <div class="pname">${p.name}</div>
+        <div class="pteam">${p.team}</div>
+      </td>
+      <td><span class="pp pp-${d.POS}">${d.POS}</span></td>
+      <td><span class="tb tb${Math.min(+d.Tier||5,10)}">${d.Tier}</span></td>
+      <td>${fN(d.Total_SGP)}</td>
+      <td>${fV(d.VAR)}</td>
+      <td>${fS(d.RSGP)}</td>
+      <td>${fS(d.HRSGP)}</td>
+      <td>${fS(d.RBISGP)}</td>
+      <td>${fS(d.SBSGP)}</td>
+      <td>${fS(d.OBPSGP)}</td>
+      <td>${fS(d.KSGP)}</td>
+      <td>${fS(d.QSSGP)}</td>
+      <td>${fS(d.SVSGP)}</td>
+      <td>${fS(d.ERASGP)}</td>
+      <td>${fS(d.WHIPSGP)}</td>
+      <td><button class="dbtn ${gone?'undraft':''}" data-id="${esc(d._id)}">${gone?'Undraft':'Draft'}</button></td>
+    `;
+
+    if (!gone) {
+      tr.addEventListener('mouseenter', () => { hovered=d._id; hlDot(d._id); });
+      tr.addEventListener('mouseleave', () => { hovered=null; clearHlDot(); });
+    }
+
+    tbody.appendChild(tr);
+  });
+
+  // Draft buttons
+  tbody.querySelectorAll('.dbtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      drafted.has(id) ? drafted.delete(id) : drafted.add(id);
+      render();
+    });
+  });
+}
+
+// ── Highlight helpers ────────────────────────────────────────────────────────
+function hlRow(id) {
+  document.querySelectorAll('#tbody tr').forEach(tr => {
+    const on = tr.dataset.id === id;
+    tr.classList.toggle('hl', on);
+    if (on) tr.scrollIntoView({ block:'nearest', behavior:'smooth' });
+  });
+}
+function clearHlRow() {
+  document.querySelectorAll('#tbody tr.hl').forEach(tr => tr.classList.remove('hl'));
+}
+function hlDot(id) {
+  d3.selectAll('.dot-'+safeId(id)).attr('r',9).attr('fill-opacity',1).attr('stroke-width',2.5);
+}
+function clearHlDot() {
+  d3.selectAll('[class^="dot-"]').attr('r',5).attr('fill-opacity',0.72).attr('stroke-width',1);
+}
+
+// ── Controls ─────────────────────────────────────────────────────────────────
+function setupControls() {
+  document.getElementById('pos-pills').addEventListener('click', e => {
+    const pill = e.target.closest('.pill');
+    if (!pill) return;
+    posFil = pill.dataset.pos;
+    document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+    pill.classList.add('active');
+    renderTable();
+  });
+
+  document.getElementById('tog-wrap').addEventListener('click', () => {
+    showDrafted = !showDrafted;
+    document.getElementById('tog').classList.toggle('on', showDrafted);
+    render();
+  });
+
+  document.querySelectorAll('th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      sortDir = sortCol===col && sortDir==='desc' ? 'asc' : 'desc';
+      sortCol = col;
+      document.querySelectorAll('th').forEach(h=>{ h.classList.remove('sa'); h.querySelector('.si')&&(h.querySelector('.si').textContent='↕'); });
+      th.classList.add('sa');
+      if (th.querySelector('.si')) th.querySelector('.si').textContent = sortDir==='desc'?'↓':'↑';
+      renderTable();
+    });
+  });
+
+  // Set initial sort indicator
+  const varTh = document.querySelector('th[data-col="VAR"]');
+  if (varTh && varTh.querySelector('.si')) varTh.querySelector('.si').textContent = '↓';
+}
+
+// ── Format helpers ───────────────────────────────────────────────────────────
+function fN(v) { return (+v).toFixed(2); }
+function fV(v) {
+  const n = +v;
+  if (isNaN(n)) return '<span class="dim-num">—</span>';
+  const cls = n >= 0 ? 'pos-num' : 'neg-num';
+  return `<span class="${cls}">${n.toFixed(2)}</span>`;
+}
+function fS(v) {
+  const n = +v;
+  if (!n || Math.abs(n) < 0.005) return '<span class="dim-num">—</span>';
+  return n.toFixed(2);
+}
+function safeId(s) { return s.replace(/[^a-zA-Z0-9]/g,'_'); }
+function esc(s) { return s.replace(/"/g,'&quot;'); }
+
+// ── Sample data ──────────────────────────────────────────────────────────────
+function sampleData() {
+  return [
+    {Player:"Aaron Judge (NYY - LF,CF,RF,DH)",POS:"OF",OverallRank:1,Total_SGP:23.1,VAR:13.6,Tier:1,RSGP:3.2,HRSGP:4.1,RBISGP:3.8,SBSGP:0.4,OBPSGP:2.0,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Tarik Skubal (DET - SP)",POS:"SP",OverallRank:2,Total_SGP:13.1,VAR:12.4,Tier:1,RSGP:0,HRSGP:0,RBISGP:0,SBSGP:0,OBPSGP:0,KSGP:2.8,QSSGP:1.9,SVSGP:0,ERASGP:4.6,WHIPSGP:3.8},
+    {Player:"Juan Soto (NYM - LF,RF)",POS:"OF",OverallRank:3,Total_SGP:21.9,VAR:12.4,Tier:1,RSGP:3.0,HRSGP:3.1,RBISGP:3.2,SBSGP:0.3,OBPSGP:2.3,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Paul Skenes (PIT - SP)",POS:"SP",OverallRank:4,Total_SGP:11.0,VAR:10.4,Tier:2,RSGP:0,HRSGP:0,RBISGP:0,SBSGP:0,OBPSGP:0,KSGP:2.5,QSSGP:1.7,SVSGP:0,ERASGP:3.9,WHIPSGP:2.9},
+    {Player:"Garrett Crochet (BOS - SP)",POS:"SP",OverallRank:5,Total_SGP:10.2,VAR:9.6,Tier:2,RSGP:0,HRSGP:0,RBISGP:0,SBSGP:0,OBPSGP:0,KSGP:3.2,QSSGP:1.4,SVSGP:0,ERASGP:3.2,WHIPSGP:2.4},
+    {Player:"Ronald Acuna Jr. (ATL - RF)",POS:"OF",OverallRank:6,Total_SGP:18.6,VAR:9.1,Tier:2,RSGP:2.8,HRSGP:2.2,RBISGP:2.4,SBSGP:1.6,OBPSGP:1.6,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Cal Raleigh (SEA - C,DH)",POS:"C",OverallRank:7,Total_SGP:15.6,VAR:8.5,Tier:2,RSGP:1.8,HRSGP:3.2,RBISGP:2.8,SBSGP:0.1,OBPSGP:1.1,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Jose Ramirez (CLE - 3B,DH)",POS:"3B",OverallRank:8,Total_SGP:16.9,VAR:8.4,Tier:2,RSGP:2.5,HRSGP:2.8,RBISGP:3.1,SBSGP:1.2,OBPSGP:1.3,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Kyle Tucker (LAD - RF,DH)",POS:"OF",OverallRank:9,Total_SGP:17.6,VAR:8.1,Tier:2,RSGP:2.4,HRSGP:2.9,RBISGP:3.0,SBSGP:1.0,OBPSGP:1.3,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Kyle Schwarber (PHI - LF,DH)",POS:"OF",OverallRank:10,Total_SGP:17.5,VAR:7.97,Tier:2,RSGP:2.5,HRSGP:3.3,RBISGP:2.8,SBSGP:0.2,OBPSGP:1.7,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Bryan Woo (SEA - SP)",POS:"SP",OverallRank:11,Total_SGP:8.6,VAR:7.96,Tier:2,RSGP:0,HRSGP:0,RBISGP:0,SBSGP:0,OBPSGP:0,KSGP:1.9,QSSGP:1.5,SVSGP:0,ERASGP:2.8,WHIPSGP:2.4},
+    {Player:"Mason Miller (SD - RP)",POS:"RP",OverallRank:12,Total_SGP:7.5,VAR:7.93,Tier:2,RSGP:0,HRSGP:0,RBISGP:0,SBSGP:0,OBPSGP:0,KSGP:1.2,QSSGP:0,SVSGP:4.1,ERASGP:1.5,WHIPSGP:0.7},
+    {Player:"Edwin Diaz (LAD - RP)",POS:"RP",OverallRank:13,Total_SGP:6.93,VAR:7.35,Tier:3,RSGP:0,HRSGP:0,RBISGP:0,SBSGP:0,OBPSGP:0,KSGP:1.1,QSSGP:0,SVSGP:3.8,ERASGP:1.3,WHIPSGP:0.73},
+    {Player:"Bobby Witt Jr. (KC - SS)",POS:"SS",OverallRank:16,Total_SGP:17.9,VAR:7.07,Tier:3,RSGP:2.6,HRSGP:2.4,RBISGP:2.9,SBSGP:2.0,OBPSGP:1.1,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Mookie Betts (LAD - 2B,RF)",POS:"2B",OverallRank:20,Total_SGP:13.9,VAR:5.3,Tier:3,RSGP:2.4,HRSGP:1.9,RBISGP:2.0,SBSGP:0.9,OBPSGP:1.7,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Francisco Lindor (NYM - SS)",POS:"SS",OverallRank:22,Total_SGP:14.8,VAR:3.9,Tier:4,RSGP:2.2,HRSGP:2.0,RBISGP:2.3,SBSGP:0.8,OBPSGP:1.1,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Freddie Freeman (LAD - 1B)",POS:"1B",OverallRank:18,Total_SGP:14.4,VAR:3.7,Tier:4,RSGP:2.3,HRSGP:1.8,RBISGP:2.6,SBSGP:0.3,OBPSGP:1.9,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+    {Player:"Yordan Alvarez (HOU - LF,DH)",POS:"OF",OverallRank:19,Total_SGP:14.2,VAR:4.7,Tier:3,RSGP:2.0,HRSGP:2.7,RBISGP:2.8,SBSGP:0.1,OBPSGP:1.6,KSGP:0,QSSGP:0,SVSGP:0,ERASGP:0,WHIPSGP:0},
+  ];
+}
+
+boot();
+</script>
+</body>
+</html>
